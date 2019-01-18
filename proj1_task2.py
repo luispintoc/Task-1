@@ -21,7 +21,7 @@ def closed_form(X, Y):
 def grad_des(X, Y, w0, beta, eta0, eps):
 
     # X should have the bias term
-    
+    # w0 = np.random.random((len(X[0]),1))
     d = 1e10 # sth large
     i = 0
     
