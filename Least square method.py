@@ -22,14 +22,14 @@ newx = np.column_stack((x, one))
 
 
 
-lm = linear_model.LinearRegression()
-lm.fit(x,y)
+#lm = linear_model.LinearRegression()
+#lm.fit(x,y)
 
-pt.figure(3)
-pr = lm.predict(xtest)
-print('The correlation between outputs with sklearn regression method is:',math.sqrt(lm.score(ytest,pr)))
-pt.scatter(ytest,pr,s=5,color='c')
-pt.title('Linear Regression SkLearn')
+#pt.figure(3)
+#pr = lm.predict(xtest)
+#print('The correlation between outputs with sklearn regression method is:',math.sqrt(lm.score(ytest,pr)))
+#pt.scatter(ytest,pr,s=5,color='c')
+#pt.title('Linear Regression SkLearn')
 
 
 
@@ -71,11 +71,18 @@ r = 0
 g = closed_form(newx, y, r)
 ypredicted2 = g[[0]]*xtest + g[[1]]
 print('The line equation is: ',g[[0]],'x + ',g[[1]])
+<<<<<<< HEAD
 print('The correlation between outputs with closed-form method is:', math.sqrt(lm.score(ytest,ypredicted2)))
 
 
 w0 = np.random.random((len(newx[0]),1))
 beta = list(range(0,500))
+=======
+#print('The correlation between outputs with closed-form method is:', math.sqrt(lm.score(ytest,ypredicted2)))
+
+w0 = np.random.random((len(newx[0]),1))
+beta = list(range(0,300))
+>>>>>>> 76e8a8fefd88c8d279e964fc8187e841d0677d16
 #beta = [x / 300 for x in beta]
 beta = [0 for x in beta]
 
@@ -83,5 +90,9 @@ j = grad_des(newx, y, w0, beta, 0.0003, 0.0001, r)
 print(j)
 ypredicted3 = j[[0]]*xtest + j[[1]]
 print('The line equation is: ',j[[0]],'x + ',j[[1]])
+<<<<<<< HEAD
 print('The correlation between outputs with closed-form method is:', math.sqrt(lm.score(ytest,ypredicted3)))
+=======
+#print('The correlation between outputs with closed-form method is:', math.sqrt(lm.score(ytest,ypredicted3)))
+>>>>>>> 76e8a8fefd88c8d279e964fc8187e841d0677d16
 
