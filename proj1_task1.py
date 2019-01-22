@@ -30,9 +30,20 @@ def bool_to_binary(feature):
 	else: 
 		return 1
 
-def sort_dict(dict):
+# def sort_dict(dict):
+# 	sorted_d = sorted(dict.items(), key=lambda x:x[1])
+# 	return sorted_d
+
+def top160words(dict):
 	sorted_d = sorted(dict.items(), key=lambda x:x[1])
-	return sorted_d
+	i = 0
+	#print(len(sorted_d))
+	topwords = []
+	while i < 160:
+		topwords.append(sorted_d[len(sorted_d)-1-i])
+		i += 1
+	return topwords
+
 
 def filterOutPunc(text): 
     endCheck = len(text)-1
@@ -79,25 +90,10 @@ def putInDict(text_list):
             #newWord = filterOutPunc(text)
             dict[newWord] = 1
 
-wordMatrix = np.eye(1,160) #1 row, 160 columns 
-
-row = 1
-column = 1
-counter = 0
-def makeMatrix(wordMatrix, dict, text_list):
-    for word in dict: #iterate through dictionary
-        for sentence in text_list: 
-            for text in sentence:
-                if word == text: 
-                    wordMatrix[row, column] += 1
-
-                 
-
-
 ## LOOPS ##
 
 i = 0
-while i < 1000:
+while i < 10000:
 	
 	is_root = bool_to_binary(data[i]['is_root'])
 	is_root_list.append(is_root)
@@ -115,10 +111,7 @@ while i < 1000:
 	
 	i += 1
 
-
-print(sort_dict(dict)) 
-
-
+print(top160words(dict))
 
 
 ## PLOTS ##
