@@ -4,9 +4,9 @@ import pandas as pd
 import matplotlib.pyplot as pt
 from sklearn import linear_model
 
-original_training_data = pd.read_csv('C:/Users/luizi/Documents/COMP 551/Least Square Method/train.csv')
+original_training_data = pd.read_csv('train.csv')
 training_data = original_training_data.dropna()
-original_test_data = pd.read_csv('C:/Users/luizi/Documents/COMP 551/Least Square Method/test.csv')
+original_test_data = pd.read_csv('test.csv')
 test_data = original_test_data.dropna()
 #print(test_data.head(10))
 
@@ -23,14 +23,14 @@ newx = np.column_stack((x,one))
 
 
 
-lm = linear_model.LinearRegression()
-lm.fit(x,y)
+#lm = linear_model.LinearRegression()
+#lm.fit(x,y)
 
-pt.figure(3)
-pr = lm.predict(xtest)
-print('The correlation between outputs with sklearn regression method is:',math.sqrt(lm.score(ytest,pr)))
-pt.scatter(ytest,pr,s=5,color='c')
-pt.title('Linear Regression SkLearn')
+#pt.figure(3)
+#pr = lm.predict(xtest)
+#print('The correlation between outputs with sklearn regression method is:',math.sqrt(lm.score(ytest,pr)))
+#pt.scatter(ytest,pr,s=5,color='c')
+#pt.title('Linear Regression SkLearn')
 
 
 
@@ -67,9 +67,9 @@ def grad_des(X, Y, w0, beta, eta0, eps):
 g = closed_form(newx,y)
 ypredicted2 = g[[0]]*xtest + g[[1]]
 print('The line equation is: ',g[[0]],'x + ',g[[1]])
-print('The correlation between outputs with closed-form method is:', math.sqrt(lm2.score(ytest,ypredicted2)))
+#print('The correlation between outputs with closed-form method is:', math.sqrt(lm.score(ytest,ypredicted2)))
 
-w0 = np.random.random((len(x[0]),1))
+w0 = np.random.random((len(newx[0]),1))
 beta = list(range(0,300))
 #beta = [x / 300 for x in beta]
 beta = [0 for x in beta]
@@ -79,5 +79,5 @@ beta = [0 for x in beta]
 j = grad_des(np.asarray(newx),np.asarray(y),w0,beta, 0.01,0.0001)
 ypredicted3 = j[[0]]*xtest + j[[1]]
 print('The line equation is: ',j[[0]],'x + ',j[[1]])
-print('The correlation between outputs with closed-form method is:', math.sqrt(lm2.score(ytest,ypredicted3)))
+#print('The correlation between outputs with closed-form method is:', math.sqrt(lm.score(ytest,ypredicted3)))
 

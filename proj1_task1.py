@@ -27,6 +27,8 @@ children_list = []
 text_list = []
 words = []
 
+
+
 while i < 10000:
 	
 	is_root = bool_to_binary(data[i]['is_root'])
