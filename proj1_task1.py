@@ -13,20 +13,77 @@ import matplotlib.pyplot as pt
 with open("proj1_data.json") as fp:
     data = json.load(fp)
 
+## VARAIBLES ##
+
+is_root_list = []
+popularity_list = []
+controversiality_list = []
+children_list = []
+words = []
+sentence = []
+
+## FUNCTIONS ##
+
 def bool_to_binary(feature):
 	if feature is False:
 		return 0
 	else: 
 		return 1
 
-i = 0
-is_root_list = []
-popularity_list = []
-controversiality_list = []
-children_list = []
-text_list = []
-words = []
+def sort_dict(dict):
+	sorted_d = sorted(dict.items(), key=lambda x:x[1])
+	return sorted_d
 
+def filterOutPunc(text): 
+    endCheck = len(text)-1
+    tempWord = text
+    if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
+        #print("found an !")
+        tempWord = text[0:endCheck]
+        #print("the word is:" + tempWord)
+    if(text[0] == '"' ):
+        #print("found a quote--front")
+        tempWord = text[1:]
+        #print(tempWord)
+    if(text[endCheck] == '"' ):
+        #print("found a quote--back")
+        tempWord = text[:endCheck]
+        #print(tempWord)
+    if(text[0] == '"' and text[endCheck] == '"'):
+        #print("single word in quotes")
+        tempWord = text[1:endCheck]
+    if(text[endCheck] == ',' ):
+        #print("found a comma")
+        tempWord = text[:endCheck]
+    if(text[0] == '*' ):
+        #print("found an asterisk--front")
+        tempWord = text[1:]
+    if(text[endCheck] == '*' ):
+        #print("found an asterisk-back")
+        tempWord = text[:endCheck]
+    if(text[0] == '*' and text[endCheck] == '*'):
+        #print("single word in asterisks")
+        tempWord = text[1:endCheck]
+    
+    return tempWord       
+
+dict = {}
+
+def putInDict(text_list):
+    for text in text_list: 
+        newWord = filterOutPunc(text)
+        if newWord in dict: 
+            counter = dict[newWord] +1
+            dict[newWord] = counter 
+        else: 
+            #newWord = filterOutPunc(text)
+            dict[newWord] = 1
+
+
+
+## LOOPS ##
+
+i = 0
 while i < 10000:
 	
 	is_root = bool_to_binary(data[i]['is_root'])
@@ -38,9 +95,18 @@ while i < 10000:
 
 	children_list.append(data[i]['children'])
 
+	text_list = []
 	text_list.append(data[i]['text'].lower().split())
+	sentence.append(text_list[0][0])
+	putInDict(sentence)
 	
 	i += 1
+
+
+print(sort_dict(dict)) 
+
+
+## PLOTS ##
 
 pt.figure(figsize=(10,4))
 pt.subplot(1,3,1)
@@ -62,6 +128,6 @@ pt.scatter(children_list,popularity_list,s=3,c='b')
 #pt.title('Popularity vs children for training data')
 pt.xlabel('children')
 pt.ylabel('Popularity_score')
-pt.show()
+#pt.show()
 
-#print(text_list)
+#print(sentence)
