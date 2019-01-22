@@ -24,6 +24,7 @@ def grad_des(X, Y, w0, beta, eta0, eps):
     # w0 = np.random.random((len(X[0]),1))
     d = 1e10 # sth large
     i = 0
+    w_old = w0
     
     while ( ~( (d<eps)|(i>len(beta)-1) ) ):
         
@@ -37,11 +38,18 @@ def grad_des(X, Y, w0, beta, eta0, eps):
 
     return w
 
-'''
+
 # for testing
+'''
 X = np.array([[1, 1], [1, 2], [1, 3], [1, 4], [1, 5], [1, 6]] , dtype=np.float64)
 Y = np.array([[1.5], [2], [3], [4], [3.5], [3.8]], dtype=np.float64)
 
+w0 = np.random.random((len(X[0]),1))
+beta = list(range(0,300))
+#beta = [x / 300 for x in beta]
+beta = [0 for x in beta]
 w = closed_form(X, Y)
+print(w)
+w = grad_des(X, Y, w0, beta, 0.01, 0.0001)
 print(w)
 '''
