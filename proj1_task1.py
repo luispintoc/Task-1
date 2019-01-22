@@ -30,10 +30,6 @@ def bool_to_binary(feature):
 	else: 
 		return 1
 
-# def sort_dict(dict):
-# 	sorted_d = sorted(dict.items(), key=lambda x:x[1])
-# 	return sorted_d
-'''
 def top160words(dict):
 	sorted_d = sorted(dict.items(), key=lambda x:x[1])
 	i = 0
@@ -44,7 +40,24 @@ def top160words(dict):
 		i += 1
 	return topwords
 
-'''
+def dictToMatrix (popList, text_data): #first input: 160 words , second input: comments
+    X = []
+    X = np.zeros( (len(text_data), len(popList)) )
+    row = 0
+    column = 0
+    for sentence in text_data: 
+        column = 0
+        for entry in popList: 
+            counter = 0
+            for word in sentence:
+                if word == entry:
+                    counter += 1
+                
+            X[row, column] = counter
+            column += 1
+        row += 1
+    return X
+
 def filterOutPunc(text): 
     endCheck = len(text)-1
     tempWord = text
@@ -93,7 +106,7 @@ def putInDict(text_list):
 ## LOOPS ##
 
 i = 0
-while i < 10000:
+while i < 1000:
 	
 	is_root = bool_to_binary(data[i]['is_root'])
 	is_root_list.append(is_root)
@@ -111,31 +124,31 @@ while i < 10000:
 	
 	i += 1
 
-#print(top160words(dict))
-
+print(dictToMatrix(top160words(dict),sentence))
+print(top160words(dict))
 
 ## PLOTS ##
 
-pt.figure(figsize=(10,4))
-pt.subplot(1,3,1)
-pt.scatter(is_root_list,popularity_list,s=3,c='c')
-#pt.title('Popularity vs is_root for training data')
-pt.xlabel('is_root')
-pt.ylabel('Popularity_score')
-#pt.show()
+# pt.figure(figsize=(10,4))
+# pt.subplot(1,3,1)
+# pt.scatter(is_root_list,popularity_list,s=3,c='c')
+# #pt.title('Popularity vs is_root for training data')
+# pt.xlabel('is_root')
+# pt.ylabel('Popularity_score')
+# #pt.show()
 
-pt.subplot(1,3,2)
-pt.scatter(controversiality_list,popularity_list,s=3,c='r')
-#pt.title('Popularity vs Controversiality for training data')
-pt.xlabel('Controversiality')
-pt.ylabel('Popularity_score')
-#pt.show()
+# pt.subplot(1,3,2)
+# pt.scatter(controversiality_list,popularity_list,s=3,c='r')
+# #pt.title('Popularity vs Controversiality for training data')
+# pt.xlabel('Controversiality')
+# pt.ylabel('Popularity_score')
+# #pt.show()
 
-pt.subplot(1,3,3)
-pt.scatter(children_list,popularity_list,s=3,c='b')
-#pt.title('Popularity vs children for training data')
-pt.xlabel('children')
-pt.ylabel('Popularity_score')
+# pt.subplot(1,3,3)
+# pt.scatter(children_list,popularity_list,s=3,c='b')
+# #pt.title('Popularity vs children for training data')
+# pt.xlabel('children')
+# pt.ylabel('Popularity_score')
 #pt.show()
 
 #print(sentence)
