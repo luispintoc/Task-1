@@ -79,20 +79,26 @@ def putInDict(text_list):
             #newWord = filterOutPunc(text)
             dict[newWord] = 1
 
-wordMatrix = np.eye(1,160) #1 row, 160 columns 
+X = np.zeros( (len(text_data), len(popList)) )
 
-row = 1
-column = 1
-counter = 0
-def makeMatrix(wordMatrix, dict, text_list):
-    for word in dict: #iterate through dictionary
-        for sentence in text_list: 
-            for text in sentence:
-                if word == text: 
-                    wordMatrix[row, column] += 1
-
-                 
-
+def dictToMatrix (X, popList, text_data): 
+    row = 0
+    column = 0
+    for sentence in text_data: 
+        column = 0
+        for entry in popList: 
+            counter = 0
+            for word in sentence:
+                if word == entry:
+                    counter += 1
+                
+            X[row, column] = counter
+            #print(X)
+            column += 1
+        row += 1
+    print(X)
+    
+dictToMatrix(X, popList, text_data)   
 
 ## LOOPS ##
 
