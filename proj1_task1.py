@@ -33,7 +33,7 @@ def bool_to_binary(feature):
 # def sort_dict(dict):
 # 	sorted_d = sorted(dict.items(), key=lambda x:x[1])
 # 	return sorted_d
-
+'''
 def top160words(dict):
 	sorted_d = sorted(dict.items(), key=lambda x:x[1])
 	i = 0
@@ -44,7 +44,7 @@ def top160words(dict):
 		i += 1
 	return topwords
 
-
+'''
 def filterOutPunc(text): 
     endCheck = len(text)-1
     tempWord = text
@@ -111,7 +111,7 @@ while i < 10000:
 	
 	i += 1
 
-print(top160words(dict))
+#print(top160words(dict))
 
 
 ## PLOTS ##
