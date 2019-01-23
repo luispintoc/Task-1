@@ -1,154 +1,154 @@
-# Now the data is loaded.
-# It a list of data points, where each datapoint is a dictionary with the following attributes:
-# popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
-# children : the number of replies to this comment (type: int)
-# text : the text of this comment (type: string)
-# controversiality : a score for how "controversial" this comment is (automatically computed by Reddit)
-# is_root : if True, then this comment is a direct reply to a post; if False, this is a direct reply to another comment 
+#All functions are within splitData
+#Inputs are: data set, first data point and last data point (to differenciate between training, validat and test sets)
+#Outputs: There are two different outputs depending on Task 3
+#For Task3.1 we ommit the text features, therefore the outputs are X(children,controversiality,is_root) and Y
+#For Task3.2 we use the text features and we have 3 different X sets( one without those features,
+#one with the top 60 and one with the top 160)
 
-import json # we need to use the JSON package to load the data, since the data is stored in JSON format
+
 import numpy as np
 import matplotlib.pyplot as pt
 
-with open("proj1_data.json") as fp:
-    data = json.load(fp)
+class proj1_task1:
 
-## VARAIBLES ##
+	def splitData(data,first_datapoint,last_datapoint): 
+	#for training (0,10000) - for validation (10000,11000) and testing (11000,12000)
+		i = first_datapoint
+		
+		## VARAIBLES ##
+		is_root_list = []
+		popularity_list = []
+		controversiality_list = []
+		children_list = []
+		comments_list = []
+		words = []
+		sentence = []
 
-is_root_list = []
-popularity_list = []
-controversiality_list = []
-children_list = []
-words = []
-sentence = []
+		def bool_to_binary(feature):
+			if feature is False:
+				return 0
+			else: 
+				return 1
 
-## FUNCTIONS ##
+		dict = {}
 
-def bool_to_binary(feature):
-	if feature is False:
-		return 0
-	else: 
-		return 1
+		def putInDict(text_list):
+		    for text in text_list: 
+		        newWord = filterOutPunc(text)
+		        if newWord in dict: 
+		            counter = dict[newWord] +1
+		            dict[newWord] = counter 
+		        else: 
+		            #newWord = filterOutPunc(text)
+		            dict[newWord] = 1
 
-def top160words(dict):
-	sorted_d = sorted(dict.items(), key=lambda x:x[1])
-	i = 0
-	#print(len(sorted_d))
-	topwords = []
-	while i < 160:
-		topwords.append(sorted_d[len(sorted_d)-1-i])
-		i += 1
-	return topwords
+		def filterOutPunc(text): 
+		    endCheck = len(text)-1
+		    tempWord = text
+		    if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
+		        #print("found an !")
+		        tempWord = text[0:endCheck]
+		        #print("the word is:" + tempWord)
+		    if(text[0] == '"' ):
+		        #print("found a quote--front")
+		        tempWord = text[1:]
+		        #print(tempWord)
+		    if(text[endCheck] == '"' ):
+		        #print("found a quote--back")
+		        tempWord = text[:endCheck]
+		        #print(tempWord)
+		    if(text[0] == '"' and text[endCheck] == '"'):
+		        #print("single word in quotes")
+		        tempWord = text[1:endCheck]
+		    if(text[endCheck] == ',' ):
+		        #print("found a comma")
+		        tempWord = text[:endCheck]
+		    if(text[0] == '*' ):
+		        #print("found an asterisk--front")
+		        tempWord = text[1:]
+		    if(text[endCheck] == '*' ):
+		        #print("found an asterisk-back")
+		        tempWord = text[:endCheck]
+		    if(text[0] == '*' and text[endCheck] == '*'):
+		        #print("single word in asterisks")
+		        tempWord = text[1:endCheck]
+		    
+		    return tempWord       
 
-def dictToMatrix (popList, text_data): #first input: 160 words , second input: comments
-    X = []
-    X = np.zeros( (len(text_data), len(popList)) )
-    row = 0
-    column = 0
-    for sentence in text_data: 
-        column = 0
-        for entry in popList: 
-            counter = 0
-            for word in sentence:
-                if word == entry:
-                    counter += 1
-                
-            X[row, column] = counter
-            column += 1
-        row += 1
-    return X
 
-def filterOutPunc(text): 
-    endCheck = len(text)-1
-    tempWord = text
-    if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
-        #print("found an !")
-        tempWord = text[0:endCheck]
-        #print("the word is:" + tempWord)
-    if(text[0] == '"' ):
-        #print("found a quote--front")
-        tempWord = text[1:]
-        #print(tempWord)
-    if(text[endCheck] == '"' ):
-        #print("found a quote--back")
-        tempWord = text[:endCheck]
-        #print(tempWord)
-    if(text[0] == '"' and text[endCheck] == '"'):
-        #print("single word in quotes")
-        tempWord = text[1:endCheck]
-    if(text[endCheck] == ',' ):
-        #print("found a comma")
-        tempWord = text[:endCheck]
-    if(text[0] == '*' ):
-        #print("found an asterisk--front")
-        tempWord = text[1:]
-    if(text[endCheck] == '*' ):
-        #print("found an asterisk-back")
-        tempWord = text[:endCheck]
-    if(text[0] == '*' and text[endCheck] == '*'):
-        #print("single word in asterisks")
-        tempWord = text[1:endCheck]
-    
-    return tempWord       
+		while i < last_datapoint:
+			
+			is_root = bool_to_binary(data[i]['is_root'])
+			is_root_list.append(is_root)
+			
+			popularity_list.append(data[i]['popularity_score'])
 
-dict = {}
+			comments_list.append(data[i]['text'])
 
-def putInDict(text_list):
-    for text in text_list: 
-        newWord = filterOutPunc(text)
-        if newWord in dict: 
-            counter = dict[newWord] +1
-            dict[newWord] = counter 
-        else: 
-            #newWord = filterOutPunc(text)
-            dict[newWord] = 1
+			controversiality_list.append(data[i]['controversiality'])
 
-## LOOPS ##
+			children_list.append(data[i]['children'])
 
-i = 0
-while i < 1000:
-	
-	is_root = bool_to_binary(data[i]['is_root'])
-	is_root_list.append(is_root)
-	
-	popularity_list.append(data[i]['popularity_score'])
+			text_list = []
+			text_list.append(data[i]['text'].lower().split())
+			sentence.append(text_list[0][0])
+			putInDict(sentence)
+			
+			i += 1
 
-	controversiality_list.append(data[i]['controversiality'])
 
-	children_list.append(data[i]['children'])
+		def topNwords(dict,N):
+		    sorted_d = sorted(dict.items(), key=lambda x:x[1])
+		    i = 0
+		    topwords = []
+		    while i < N:
+		        topwords.append(sorted_d[len(sorted_d)-1-i])
+		        i += 1
+		    return topwords
 
-	text_list = []
-	text_list.append(data[i]['text'].lower().split())
-	sentence.append(text_list[0][0])
-	putInDict(sentence)
-	
-	i += 1
 
-print(dictToMatrix(top160words(dict),sentence))
-print(top160words(dict))
+		def dictToMatrix (popList, text_data): #first input: N top words , second input: comments
+		    X = []
+		    X = np.zeros( (len(text_data), len(popList)) )
+		    row = 0
+		    column = 0
+		    for sentence in text_data: 
+		        column = 0
+		        for entry in popList: 
+		            counter = 0
+		            for word in sentence:
+		                if word == entry:
+		                    counter += 1
+		                
+		            X[row, column] = counter
+		            column += 1
+		        row += 1
+		    return X
 
-## PLOTS ##
 
-# pt.figure(figsize=(10,4))
-# pt.subplot(1,3,1)
-# pt.scatter(is_root_list,popularity_list,s=3,c='c')
-# #pt.title('Popularity vs is_root for training data')
-# pt.xlabel('is_root')
-# pt.ylabel('Popularity_score')
-# #pt.show()
+		#To see the top words
+		#r = topNwords(dict,160)
+		#return (x,y,r)
 
-# pt.subplot(1,3,2)
-# pt.scatter(controversiality_list,popularity_list,s=3,c='r')
-# #pt.title('Popularity vs Controversiality for training data')
-# pt.xlabel('Controversiality')
-# pt.ylabel('Popularity_score')
-# #pt.show()
+		y = popularity_list
 
-# pt.subplot(1,3,3)
-# pt.scatter(children_list,popularity_list,s=3,c='b')
-# #pt.title('Popularity vs children for training data')
-# pt.xlabel('children')
-# pt.ylabel('Popularity_score')
-#pt.show()
 
-#print(sentence)
+		
+
+		#Use this X for Task 3.1
+		x = np.column_stack((children_list,controversiality_list,is_root_list))
+		return (x,y)		
+
+		
+		'''
+		#Use this x for Task 3.2
+		
+		top60_words = dictToMatrix(topNwords(dict,60),comments_list)
+		top160_words = dictToMatrix(topNwords(dict,160),comments_list)
+
+		x_no_text = np.column_stack((children_list,controversiality_list,is_root_list))
+		x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words))
+		x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
+		return (x_no_text,x_top_60,x_top_160,y)
+		'''
+		
