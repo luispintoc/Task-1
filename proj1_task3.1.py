@@ -3,6 +3,7 @@ import numpy as np
 import matplotlib.pyplot as pt
 from proj1_task1 import *
 from proj1_task2 import closed_form
+from proj1_task2 import grad_des
 
 # It a list of data points, where each datapoint is a dictionary with the following attributes:
 # popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
@@ -15,15 +16,13 @@ with open("proj1_data.json") as fp:
     data = json.load(fp)
 
 
-#to test and print the words
-#[x,y,r] = proj1_task1.splitData(data,0,10000)
-#print(r)
-
-
-# #for Task 3.1
+#for Task 3.1
 [x_training, y_training] = proj1_task1.splitData(data,0,10000)
 [x_validation, y_validation] = proj1_task1.splitData(data,10001,11000)
 [x_test, y_test] = proj1_task1.splitData(data,11001,12000)
+
+
+#Closed_form approach
 w = []
 w = closed_form(x_training, y_training)
 y_predicted = np.matmul(w,x_validation.T)
@@ -35,10 +34,7 @@ print('The mean-squared error on the validation set is:', error)
 error2 = np.square(np.subtract(y_predicted2, y_test)).mean()
 print('The mean-squared error on the test set is:', error2)
 
+#Gradient descent approach
+#wd = []
+#wd = grad_des(x_training,)
 
-
-#for Task 3.2
-# [x_no_text,x_top60,x_top160,y_training] = proj1_task1.splitData(data,0,1000)
-# print(len(x1))
-# print(len(x2))
-# print(len(x3))
