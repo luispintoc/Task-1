@@ -23,6 +23,7 @@ class proj1_task1:
 		comments_list = []
 		words = []
 		sentence = []
+		extLinkColumn = [] 
 
 		def bool_to_binary(feature):
 			if feature is False:
@@ -75,6 +76,14 @@ class proj1_task1:
 		    
 		    return tempWord       
 
+		def hasExternalLink(text_list):
+			extLinkCount = 0
+			
+			for text in text_list: 
+				if (text[0:2] == "www"):
+					extLinkCount += 1
+				
+			return(extLinkCount)	
 
 		while i < last_datapoint:
 			
@@ -93,6 +102,8 @@ class proj1_task1:
 			text_list.append(data[i]['text'].lower().split())
 			sentence.append(text_list[0][0])
 			putInDict(sentence)
+			extLinkColumn.append(hasExternalLink(sentence))
+			
 			
 			i += 1
 
@@ -125,6 +136,9 @@ class proj1_task1:
 		        row += 1
 		    return X
 
+		
+
+		
 
 		#To see the top words
 		#r = topNwords(dict,160)
@@ -139,6 +153,10 @@ class proj1_task1:
 		x = np.column_stack((children_list,controversiality_list,is_root_list))
 		return (x,y)		
 
+		'''
+		#Use this for the added feature
+		x_feat1 = np.column_stack(x, extLinkColumn)
+		'''
 		
 		'''
 		#Use this x for Task 3.2
