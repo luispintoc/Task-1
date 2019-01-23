@@ -17,9 +17,24 @@ with open("proj1_data.json") as fp:
 
 
 #for Task 3.1
+newx_training = []
+newx_validation = []
+newx_test = []
+
 [x_training, y_training] = proj1_task1.splitData(data,0,10000)
+
+one1 = np.ones(len(x_training))
+newx_training = np.column_stack((x_training,one1))
+
 [x_validation, y_validation] = proj1_task1.splitData(data,10001,11000)
+
+one2 = np.ones(len(x_validation))
+newx_validation = np.column_stack((x_validation,one2))
+
 [x_test, y_test] = proj1_task1.splitData(data,11001,12000)
+
+one3 = np.ones(len(x_test))
+newx_test = np.column_stack((x_test,one3))
 
 
 #Closed_form approach
@@ -37,4 +52,3 @@ print('The mean-squared error on the test set is:', error2)
 #Gradient descent approach
 #wd = []
 #wd = grad_des(x_training,)
-
