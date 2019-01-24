@@ -40,9 +40,12 @@ newx_test = np.column_stack((x_test,one3))
 
 #Closed_form approach
 w = []
-w = closed_form(x_training, y_training)
-y_predicted = np.matmul(w,x_validation.T)
-y_predicted2 = np.matmul(w,x_test.T)
+w = closed_form(newx_training, y_training)
+
+
+y_predicted = np.matmul(w.T, newx_validation.T)
+y_predicted2 = np.matmul(w.T,newx_test.T)
+
 
 error = np.square(np.subtract(y_predicted, y_validation)).mean()
 print('The mean-squared error on the validation set is:', error)
@@ -58,7 +61,7 @@ w0 = np.random.random((len(newx_training[0]),1))
 beta = list(range(0,len(newx_training)))
 # print(len(w0))
 # print(len(x_training))
-wd = grad_des(newx_training,y_training,w0,beta,0.0001,0.00001) #X, Y, w0, beta, eta0, eps
+wd = grad_des(newx_training,y_training,w0,beta,0.00001,0.000001,0) #X, Y, w0, beta, eta0, eps
 
 y_predicted = np.matmul(wd.T,newx_validation.T)
 
@@ -68,7 +71,9 @@ error = np.square(np.subtract(y_predicted, y_validation)).mean()
 print('The mean-squared error on the validation set is:', error)
 error2 = np.square(np.subtract(y_predicted2, y_test)).mean()
 print('The mean-squared error on the test set is:', error2)
+
 '''
+
 
 
 
