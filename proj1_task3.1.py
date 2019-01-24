@@ -21,20 +21,21 @@ newx_training = []
 newx_validation = []
 newx_test = []
 
-[x_training, y_training] = proj1_task1.splitData(data,0,10000)
+[x_training, y_training] = proj1_task1.splitData(data,0,1000)
 
 one1 = np.ones(len(x_training))
 newx_training = np.column_stack((x_training,one1))
 
-[x_validation, y_validation] = proj1_task1.splitData(data,10001,11000)
+[x_validation, y_validation] = proj1_task1.splitData(data,1001,1100)
 
 one2 = np.ones(len(x_validation))
 newx_validation = np.column_stack((x_validation,one2))
 
-[x_test, y_test] = proj1_task1.splitData(data,11001,12000)
+[x_test, y_test] = proj1_task1.splitData(data,1101,1200)
 
 one3 = np.ones(len(x_test))
 newx_test = np.column_stack((x_test,one3))
+
 
 
 #Closed_form approach
@@ -49,6 +50,25 @@ print('The mean-squared error on the validation set is:', error)
 error2 = np.square(np.subtract(y_predicted2, y_test)).mean()
 print('The mean-squared error on the test set is:', error2)
 
+'''
+
 #Gradient descent approach
-#wd = []
-#wd = grad_des(x_training,)
+wd = []
+w0 = np.random.random((len(newx_training[0]),1))
+beta = list(range(0,len(newx_training)))
+# print(len(w0))
+# print(len(x_training))
+wd = grad_des(newx_training,y_training,w0,beta,0.0001,0.00001) #X, Y, w0, beta, eta0, eps
+
+y_predicted = np.matmul(wd.T,newx_validation.T)
+
+y_predicted2 = np.matmul(wd.T,newx_test.T)
+
+error = np.square(np.subtract(y_predicted, y_validation)).mean()
+print('The mean-squared error on the validation set is:', error)
+error2 = np.square(np.subtract(y_predicted2, y_test)).mean()
+print('The mean-squared error on the test set is:', error2)
+'''
+
+
+
