@@ -4,6 +4,8 @@ import matplotlib.pyplot as pt
 from proj1_task1 import *
 from proj1_task2 import closed_form
 from proj1_task2 import grad_des
+from sklearn import linear_model
+
 
 # It a list of data points, where each datapoint is a dictionary with the following attributes:
 # popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
@@ -21,17 +23,17 @@ newx_training = []
 newx_validation = []
 newx_test = []
 
-[x_training, y_training] = proj1_task1.splitData(data,0,10000,'Task3.1')
+[x_training, y_training] = proj1_task1.splitData(data,1001,11000,'Task3.1')
 
 one1 = np.ones(len(x_training))
 newx_training = np.column_stack((x_training,one1))
 
-[x_validation, y_validation] = proj1_task1.splitData(data,10001,11000,'Task3.1')
+[x_validation, y_validation] = proj1_task1.splitData(data,11001,12000,'Task3.1')
 
 one2 = np.ones(len(x_validation))
 newx_validation = np.column_stack((x_validation,one2))
 
-[x_test, y_test] = proj1_task1.splitData(data,11001,12000,'Task3.1')
+[x_test, y_test] = proj1_task1.splitData(data,0,1000,'Task3.1')
 
 one3 = np.ones(len(x_test))
 newx_test = np.column_stack((x_test,one3))
@@ -44,7 +46,7 @@ w = closed_form(newx_training, y_training)
 
 
 y_predicted = np.matmul(w.T, newx_validation.T)
-y_predicted2 = np.matmul(w.T,newx_test.T)
+y_predicted2 = np.matmul(w.T, newx_test.T)
 
 
 error = np.square(np.subtract(y_predicted, y_validation)).mean()
@@ -52,6 +54,15 @@ print('The mean-squared error on the validation set is:', error)
 
 error2 = np.square(np.subtract(y_predicted2, y_test)).mean()
 print('The mean-squared error on the test set is:', error2)
+
+
+
+lm2 = linear_model.LinearRegression()
+
+lm2.fit(newx_training,y_training)
+pr = lm2.predict(newx_validation)
+errorsk = np.square(np.subtract(pr, y_validation)).mean()
+print('The mean-squared error using sklearn with no text features is:', errorsk)
 
 '''
 
