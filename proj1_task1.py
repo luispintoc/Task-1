@@ -11,8 +11,8 @@ import matplotlib.pyplot as pt
 
 class proj1_task1:
 
-	def splitData(data,first_datapoint,last_datapoint): 
-	#for training (0,10000) - for validation (10000,11000) and testing (11000,12000)
+	def splitData(data,first_datapoint,last_datapoint,TaskNumber): 
+	#for training (0,10000) - for validation (10001,11000) and testing (11001,12000)
 		i = first_datapoint
 		
 		## VARAIBLES ##
@@ -23,7 +23,6 @@ class proj1_task1:
 		comments_list = []
 		words = []
 		sentence = []
-		extLinkColumn = [] 
 
 		def bool_to_binary(feature):
 			if feature is False:
@@ -47,7 +46,6 @@ class proj1_task1:
 		    endCheck = len(text)-1
 		    tempWord = text
 		    if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
-		        #print("found an !")
 		        tempWord = text[0:endCheck]
 		        #print("the word is:" + tempWord)
 		    if(text[0] == '"' ):
@@ -83,7 +81,8 @@ class proj1_task1:
 				if (text[0:2] == "www"):
 					extLinkCount += 1
 				
-			return(extLinkCount)	
+			return(extLinkCount)
+
 
 		while i < last_datapoint:
 			
@@ -102,8 +101,6 @@ class proj1_task1:
 			text_list.append(data[i]['text'].lower().split())
 			sentence.append(text_list[0][0])
 			putInDict(sentence)
-			extLinkColumn.append(hasExternalLink(sentence))
-			
 			
 			i += 1
 
@@ -136,9 +133,6 @@ class proj1_task1:
 		        row += 1
 		    return X
 
-		
-
-		
 
 		#To see the top words
 		#r = topNwords(dict,160)
@@ -146,27 +140,27 @@ class proj1_task1:
 
 		y = popularity_list
 
+		if TaskNumber == 'Task3.1':		
+		
+			#Use this X for Task 3.1
+			x = np.column_stack((children_list,controversiality_list,is_root_list))
+			return (x,y)		
 
 		
+		elif TaskNumber == 'Task3.2':
+			#Use this x for Task 3.2
+			
+			top60_words = dictToMatrix(topNwords(dict,60),comments_list)
+			top160_words = dictToMatrix(topNwords(dict,160),comments_list)
 
-		#Use this X for Task 3.1
-		x = np.column_stack((children_list,controversiality_list,is_root_list))
-		return (x,y)		
+			x_no_text = np.column_stack((children_list,controversiality_list,is_root_list))
+			x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words))
+			x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
+			return (x_no_text,x_top_60,x_top_160,y)
+		
+		else:
+			#Use this for x for Task 3.3
+			x = np.column_stack((children_list,controversiality_list,is_root_list)) #not correct
 
-		'''
-		#Use this for the added feature
-		x_feat1 = np.column_stack(x, extLinkColumn)
-		'''
-		
-		'''
-		#Use this x for Task 3.2
-		
-		top60_words = dictToMatrix(topNwords(dict,60),comments_list)
-		top160_words = dictToMatrix(topNwords(dict,160),comments_list)
 
-		x_no_text = np.column_stack((children_list,controversiality_list,is_root_list))
-		x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words))
-		x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
-		return (x_no_text,x_top_60,x_top_160,y)
-		'''
-		
+
