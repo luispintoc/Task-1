@@ -23,6 +23,7 @@ class proj1_task1:
 		comments_list = []
 		words = []
 		sentence = []
+		extLinks = [] 
 
 		def bool_to_binary(feature):
 			if feature is False:
@@ -101,6 +102,7 @@ class proj1_task1:
 			text_list.append(data[i]['text'].lower().split())
 			sentence.append(text_list[0][0])
 			putInDict(sentence)
+			extLinks.append(hasExternalLink(sentence))
 			
 			i += 1
 
@@ -153,7 +155,7 @@ class proj1_task1:
 			return (x, y)		
 
 		
-		elif TaskNumber == 'Task3.2':
+		if TaskNumber == 'Task3.2':
 			#Use this x for Task 3.2
 			
 			top60_words = dictToMatrix(topNwords(dict,60),comments_list)
@@ -164,9 +166,10 @@ class proj1_task1:
 			x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
 			return (x_no_text, x_top_60, x_top_160, y)
 		
-		else:
+		if TaskNumber == 'Task3.3':
 			#Use this for x for Task 3.3
-			x = np.column_stack((children_list,controversiality_list,is_root_list)) #not correct
+		
+			x = np.column_stack((children_list,controversiality_list,is_root_list,extLinks))
 			return(x, y)
 
 
