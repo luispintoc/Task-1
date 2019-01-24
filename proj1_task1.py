@@ -138,13 +138,19 @@ class proj1_task1:
 		#r = topNwords(dict,160)
 		#return (x,y,r)
 
-		y = popularity_list
+		y = []
+		y = np.zeros((len(popularity_list),1))
+		row = 0
+
+		for word in popularity_list:
+			y[row,0] = word
+			row += 1
 
 		if TaskNumber == 'Task3.1':		
 		
 			#Use this X for Task 3.1
 			x = np.column_stack((children_list,controversiality_list,is_root_list))
-			return (x,y)		
+			return (x, y)		
 
 		
 		elif TaskNumber == 'Task3.2':
@@ -156,11 +162,12 @@ class proj1_task1:
 			x_no_text = np.column_stack((children_list,controversiality_list,is_root_list))
 			x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words))
 			x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
-			return (x_no_text,x_top_60,x_top_160,y)
+			return (x_no_text, x_top_60, x_top_160, y)
 		
 		else:
 			#Use this for x for Task 3.3
 			x = np.column_stack((children_list,controversiality_list,is_root_list)) #not correct
+			return(x, y)
 
 
 
