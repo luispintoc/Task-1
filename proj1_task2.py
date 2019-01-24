@@ -1,6 +1,5 @@
 '''
 Mini-Project1 - COMP 551 - Winter 2019
-
 Mahyar Bayran
 Luis Pinto
 Rebecca Salganik
@@ -43,17 +42,16 @@ def grad_des(X, Y, w0, beta, eta0, eps):
 
 # for testing
 
-X = np.array([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]] , dtype=np.float64)
-Y = np.array([[1.5], [2], [3], [4], [3.5], [3.8]], dtype=np.float64)
+# X = np.array([[1, 1], [2, 1], [3, 1], [4, 1], [5, 1], [6, 1]] , dtype=np.float64)
+# Y = np.array([[1.5], [2]  , [3], [4], [3.5], [3.8]], dtype=np.float64)
 
 
 
-w0 = np.random.random((len(X[0]),1))
-beta = list(range(0,400))
-#beta = [x / 300 for x in beta]
-beta = [0 for x in beta]
-w = closed_form(X, Y)
-print(w)
-w = grad_des(X, Y, w0, beta, 0.1, 0.00001)
-print(w)
-
+# w0 = np.random.random((len(X[0]),1))
+# beta = list(range(0,400))
+# beta = [x / 300 for x in beta]
+# beta = [0 for x in beta]
+# w = closed_form(X, Y)
+# print(w)
+# w = grad_des(X, Y, w0, beta, 0.1, 0.00001)
+# print(w)
