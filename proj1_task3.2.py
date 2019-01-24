@@ -17,8 +17,8 @@ with open("proj1_data.json") as fp:
 
 #for Task 3.2
 [x1,x2,x3,y_training] = proj1_task1.splitData(data,0,1000,'Task3.2')
-[x1_validation, x2_validation, x3_validation, y_validation] = proj1_task1.splitData(data,1001,1100,'Task3.2')
-[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,1101,1200,'Task3.2')
+[x1_validation, x2_validation, x3_validation, y_validation] = proj1_task1.splitData(data,1001,1200,'Task3.2')
+[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,1101,1300,'Task3.2')
 
 w1 = []
 w2 = []
@@ -28,13 +28,13 @@ w2 = closed_form(x2, y_training)
 w3 = closed_form(x3, y_training)
 
 y1_predicted = np.matmul(w1,x1_validation.T)
-y_predicted2 = np.matmul(w,x_test.T)
+y1_predicted2 = np.matmul(w1,x1_test.T)
 
 y2_predicted = np.matmul(w2,x2_validation.T)
-y_predicted2 = np.matmul(w,x_test.T)
+y2_predicted2 = np.matmul(w2,x2_test.T)
 
 y3_predicted = np.matmul(w3,x3_validation.T)
-y_predicted2 = np.matmul(w,x_test.T)
+y3_predicted2 = np.matmul(w3,x3_test.T)
 
 #errors for the validation set
 error1 = np.square(np.subtract(y1_predicted, y_validation)).mean()
