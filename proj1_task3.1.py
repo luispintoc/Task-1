@@ -21,17 +21,17 @@ newx_training = []
 newx_validation = []
 newx_test = []
 
-[x_training, y_training] = proj1_task1.splitData(data,0,1000)
+[x_training, y_training] = proj1_task1.splitData(data,0,1000,'Task3.1')
 
 one1 = np.ones(len(x_training))
 newx_training = np.column_stack((x_training,one1))
 
-[x_validation, y_validation] = proj1_task1.splitData(data,1001,1100)
+[x_validation, y_validation] = proj1_task1.splitData(data,1001,1100,'Task3.1')
 
 one2 = np.ones(len(x_validation))
 newx_validation = np.column_stack((x_validation,one2))
 
-[x_test, y_test] = proj1_task1.splitData(data,1101,1200)
+[x_test, y_test] = proj1_task1.splitData(data,1101,1200,'Task3.1')
 
 one3 = np.ones(len(x_test))
 newx_test = np.column_stack((x_test,one3))
