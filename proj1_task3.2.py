@@ -16,9 +16,9 @@ with open("proj1_data.json") as fp:
 
 
 #for Task 3.2
-[x1,x2,x3,y_training] = proj1_task1.splitData(data,0,10000)
-[x1_validation, x2_validation, x3_validation, y_validation] = proj1_task1.splitData(data,10001,11000)
-[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,11001,12000)
+[x1,x2,x3,y_training] = proj1_task1.splitData(data,0,1000,'Task3.2')
+[x1_validation, x2_validation, x3_validation, y_validation] = proj1_task1.splitData(data,1001,1100,'Task3.2')
+[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,1101,1200,'Task3.2')
 
 w1 = []
 w2 = []
