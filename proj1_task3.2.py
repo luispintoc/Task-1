@@ -23,7 +23,7 @@ def task32(x_tr, y_tr, x_v, y_v):
     x_v = np.column_stack((x_v, one1))
 
     print('Number of columns: ',len(x_tr[0]))
-    print('Rank of x_tr: ', np.linalg.matrix_rank(x_tr))
+    print('Rank of x_tr: ', np.linalg.matrix_rank(np.multiply(x_tr.T, x_tr)))
 
     # solve
     w = closed_form(x_tr, y_tr)
@@ -36,7 +36,7 @@ def task32(x_tr, y_tr, x_v, y_v):
 #for Task 3.2
 [x1_tr, x2_tr, x3_tr, y_tr] = proj1_task1.splitData(data,0,10000,'Task3.2')
 [x1_v, x2_v, x3_v, y_v] = proj1_task1.splitData(data,10001,11000,'Task3.2')
-[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,11001,12000,'Task3.2')
+#[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,11001,12000,'Task3.2')
 
 
 #task32(x1_tr, y_tr, x1_v, y_v)

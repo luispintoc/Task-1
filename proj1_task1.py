@@ -93,8 +93,8 @@ class proj1_task1:
                         popularity_list.append(data[i]['popularity_score'])
 
                         cm = data[i]['text']
-                        cm.encode('ascii', 'ignore')
-                        comments_list.append(cm)
+                        cm.encode('UTF-8', 'ignore').decode('UTF-8')
+                        comments_list.append(filterOutPunc(cm.split(' ')))
 
                         controversiality_list.append(data[i]['controversiality'])
 
@@ -163,18 +163,20 @@ class proj1_task1:
                         tmp = topNwords(dict,60)
                         top60_words = []
                         for item in tmp:
-                                top60_words.append(item[0])
+                                top60_words.append(item[0].encode('UTF-8', 'ignore').decode('UTF-8'))
 
                         tmp = topNwords(dict,160)
                         top160_words = []
                         for item in tmp:
-                                top160_words.append(item[0])
-                                
+                                top160_words.append(item[0].encode('UTF-8', 'ignore').decode('UTF-8'))
+
+                        print(top60_words)
+                        print(comments_list[4])
                                 
                         top60_words_counts = dictToMatrix(top60_words,comments_list)
                         top160_words_counts = dictToMatrix(top160_words,comments_list)
 
-                        print(sum(top60_words_counts))
+                        print(top60_words_counts[0:10])
                         #print(topNwords(dict,60))
                         #print(comments_list[0][1])
                         
