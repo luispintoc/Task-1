@@ -11,11 +11,8 @@ import re as re
 import collections
 import matplotlib.pyplot as pt
 
-with open("proj1_data.json") as fp:
-    data = json.load(fp)
-
 def splitData(data,first_datapoint,last_datapoint,taskNumber):
-			
+
 	## VARAIBLES ##
 	cnt = collections.Counter()
 	is_root_list = []
@@ -26,6 +23,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 	words = []
 	sentence = []
 	extLinks = [] 
+	text_list = []
 
 	def bool_to_binary(feature):
 			if feature is False:
@@ -80,6 +78,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 					
 			return(extLinkCount)
 
+
 	#for training (0,10000) - for validation (10001,11000) and testing (11001,12000)
 	i = first_datapoint		
 	while i < last_datapoint:
@@ -97,7 +96,6 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
 		children_list.append(data[i]['children'])
 
-		text_list = []
 		text_list.append(data[i]['text'].lower().split())
 		sentence.append(text_list[0][0])
 		#extLinks.append(hasExternalLink(sentence))
@@ -105,9 +103,11 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 		i += 1
 	newDict(text_list)
 
+
 	def topNwords(N):
+		finalList = []
 		topNWordsList = cnt.most_common(N)
-		#print
+		#print(topNWordsList)
 		for (word,value) in topNWordsList:
 			finalList.append(word)
 		return finalList
@@ -150,13 +150,15 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 	
 	if taskNumber == 'Task3.2':
 		#Use this x for Task 3.2
-			
+		x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
+
 		top60_words = dictToMatrix(topNwords(60),text_list)
 		top160_words = dictToMatrix(topNwords(160),text_list)
-
-		x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
-		x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words))
-		x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
+		# print(top60_words)
+		# print(top60_words.shape)
+		
+		x_top_60 = np.column_stack((x_no_text,top60_words))
+		x_top_160 =  np.column_stack((x_no_text,top160_words))
 		return (x_no_text, x_top_60, x_top_160, y)
 
 	if taskNumber == 'Task3.3':
