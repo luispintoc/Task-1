@@ -15,52 +15,45 @@ with open("proj1_data.json") as fp:
     data = json.load(fp)
 
 
-def task32(x_tr, y_tr, x_v, y_v):
-    # add bias
-    one1 = np.ones(len(x_tr))
-    x_tr = np.column_stack((x_tr, one1))
-    one1 = np.ones(len(x_v))
-    x_v = np.column_stack((x_v, one1))
+def bias(x):
+	one = np.ones(len(x))
+	newx = np.column_stack((x,one))
+	return newx
 
-    print('Number of columns: ',len(x_tr[0]))
-    print('Rank of x_tr: ', np.linalg.matrix_rank(x_tr))
+def error_print(y_val,y_tes):
+	error_validation = np.square(np.subtract(y_val, y_validation)).mean()
+	error_test = np.square(np.subtract(y_tes, y_test)).mean()
+	print('The mean-squared error on the validation set is:', error_validation)
+	print('The mean-squared error on the test set is:', error_test)
 
-    # solve
-    w = closed_form(x_tr, y_tr)
-    y_predicted = np.matmul(w.T, x_v.T)
-    #errors for the validation set
-    error = np.square(np.subtract(y_predicted, y_v)).mean()
-    print('The MSE on the validation set: ', error)
 
-    
 #for Task 3.2
-[x1_tr, x2_tr, x3_tr, y_tr] = proj1_task1.splitData(data,0,10000,'Task3.2')
-[x1_v, x2_v, x3_v, y_v] = proj1_task1.splitData(data,10001,11000,'Task3.2')
-#[x1_test, x2_test, x3_test, y_test] = proj1_task1.splitData(data,11001,12000,'Task3.2')
+[x1_t,x2_t,x3_t,y_training] = splitData(data,0,10000,'Task3.2')
+x1training = bias(x1_t)
+x2training = bias(x2_t)
+x3training = bias(x3_t)
+
+[x1_v, x2_v, x3_v, y_validation] = splitData(data,10000,11000,'Task3.2')
+x1validation = bias(x1_v)
+x2validation = bias(x2_v)
+x3validation = bias(x3_v)
+
+[x1_te, x2_te, x3_te, y_test] = splitData(data,11000,12000,'Task3.2')
+x1test = bias(x1_te)
+x2test = bias(x2_te)
+x3test = bias(x3_te)
+
+def task32(xt,xv,xtest,y):
+	w = closed_form(xt,y)
+	y_predicted_val = np.matmul(xv,w)
+	y_predicted_test = np.matmul(xtest,w)
+	error_print(y_predicted_val,y_predicted_test)
 
 
-#task32(x1_tr, y_tr, x1_v, y_v)
-task32(x2_tr, y_tr, x2_v, y_v)
-#task32(x3_tr, y_tr, x3_v, y_v)
-'''
-for j in range(4,64):
-    c = 0
-    for i in range(0, len(x1_tr)):
-        c += x2_tr[i][j]
-    print(c)
-    
-'''
+print('Errors for set with no text features:')
+task32(x1training,x1validation,x1test,y_training)
+print('Errors for set with top 60 words:')
+task32(x2training,x2validation,x2test,y_training)
+print('Errors for set with top 160 words:')
+task32(x3training,x3validation,x3test,y_training)
 
-
-
-
-
-
-
-
-
-
-
-
-
-        
