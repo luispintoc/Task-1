@@ -5,7 +5,6 @@
 #For Task3.2 we use the text features and we have 3 different X sets( one without those features,
 #one with the top 60 and one with the top 160)
 
-
 import json
 import numpy as np
 import re as re 
@@ -15,7 +14,7 @@ import matplotlib.pyplot as pt
 with open("proj1_data.json") as fp:
     data = json.load(fp)
 
-def splitData(data,first_datapoint,last_datapoint,TaskNumber):
+def splitData(data,first_datapoint,last_datapoint,taskNumber):
 			
 	## VARAIBLES ##
 	cnt = collections.Counter()
@@ -106,16 +105,12 @@ def splitData(data,first_datapoint,last_datapoint,TaskNumber):
 		i += 1
 	newDict(text_list)
 
-
 	def topNwords(N):
-   		finalList = [] 
-    	topNWordsList = cnt.most_common(N)
-    	print("topNWordsList ", topNWordsList)
-    	for (word, value) in topNWordsList: 
-
-        	finalList.append(word)
-    	print (finalList)
-    	return finalList
+		topNWordsList = cnt.most_common(N)
+		#print
+		for (word,value) in topNWordsList:
+			finalList.append(word)
+		return finalList
 			
 	def dictToMatrix (popList, text_data): #first input: N top words , second input: comments
 		X = np.zeros( (len(text_data), len(popList)) )
@@ -143,37 +138,32 @@ def splitData(data,first_datapoint,last_datapoint,TaskNumber):
 	row = 0
 
 	for word in popularity_list:
-			y[row,0] = word
-			row += 1
+		y[row,0] = word
+		row += 1
 
-	if TaskNumber == 'Task3.1':		
+	if taskNumber == 'Task3.1':		
 	
-			#Use this X for Task 3.1
-			x = np.column_stack((children_list,controversiality_list,is_root_list))
-			return (x, y)		
+		#Use this X for Task 3.1
+		x = np.column_stack((children_list,controversiality_list,is_root_list))
+		return (x, y)		
 
 	
-	if TaskNumber == 'Task3.2':
-			#Use this x for Task 3.2
+	if taskNumber == 'Task3.2':
+		#Use this x for Task 3.2
 			
-					
-			top60_words_counts = dictToMatrix(topNwords(60), text_list)
-        	top160_words_counts = dictToMatrix(topNwords(160),text_list)
+		top60_words = dictToMatrix(topNwords(60),text_list)
+		top160_words = dictToMatrix(topNwords(160),text_list)
 
-			#print(top60_words_counts[0:10])
-			#print(topNwords(dict,60))
-			#print(comments_list[0][1])
-			
-			x_no_text = np.column_stack((children_list,controversiality_list,is_root_list))
-			x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words_counts))
-			x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words_counts))
-			return (x_no_text, x_top_60, x_top_160, y)
+		x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
+		x_top_60 = np.column_stack((children_list,controversiality_list,is_root_list,top60_words))
+		x_top_160 = np.column_stack((children_list,controversiality_list,is_root_list,top160_words))
+		return (x_no_text, x_top_60, x_top_160, y)
+
+	if taskNumber == 'Task3.3':
+		#Use this for x for Task 3.3
 	
-	if TaskNumber == 'Task3.3':
-			#Use this for x for Task 3.3
-	
-			x = np.column_stack((children_list,controversiality_list,is_root_list,extLinks))
-			return(x, y)
+		x = np.column_stack((children_list,controversiality_list,is_root_list,extLinks))
+		return(x, y)
 
 
 
