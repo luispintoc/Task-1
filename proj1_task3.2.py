@@ -1,7 +1,7 @@
 import json # we need to use the JSON package to load the data, since the data is stored in JSON format
 import numpy as np
 import matplotlib.pyplot as pt
-from proj1_task1 import *
+from proj1_task1 import splitData
 from proj1_task2 import closed_form
 
 # It a list of data points, where each datapoint is a dictionary with the following attributes:
@@ -23,7 +23,7 @@ def task32(x_tr, y_tr, x_v, y_v):
     x_v = np.column_stack((x_v, one1))
 
     print('Number of columns: ',len(x_tr[0]))
-    print('Rank of x_tr: ', np.linalg.matrix_rank(np.multiply(x_tr.T, x_tr)))
+    print('Rank of x_tr: ', np.linalg.matrix_rank(x_tr))
 
     # solve
     w = closed_form(x_tr, y_tr)

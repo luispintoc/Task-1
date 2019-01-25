@@ -1,7 +1,7 @@
 import json # we need to use the JSON package to load the data, since the data is stored in JSON format
 import numpy as np
 import matplotlib.pyplot as pt
-from proj1_task1 import *
+from proj1_task1 import splitData
 from proj1_task2 import closed_form
 from proj1_task2 import grad_des
 from sklearn import linear_model
