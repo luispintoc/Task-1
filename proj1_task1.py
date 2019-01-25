@@ -7,7 +7,6 @@
 
 import json
 import numpy as np
-import re as re 
 import collections
 import matplotlib.pyplot as pt
 
@@ -21,7 +20,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 	children_list = []
 	comments_list = [] 
 	words = []
-	sentence = []
+	#sentence = []
 	extLinks = [] 
 	text_list = []
 
@@ -37,7 +36,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 				cnt[word] += 1
 
 
-	def filterOutPunc(text): 
+	def filterOutPunc(text,taskNumber): 
 		endCheck = len(text)-1
 		tempWord = text
 		if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
@@ -79,7 +78,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 			return(extLinkCount)
 
 
-	#for training (0,10000) - for validation (10001,11000) and testing (11001,12000)
+	#for training (0,10000) - for validation (10000,11000) and testing (11000,12000)
 	i = first_datapoint		
 	while i < last_datapoint:
 			
@@ -88,17 +87,13 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 		
 		popularity_list.append(data[i]['popularity_score'])
 
-		#cm = data[i]['text']
-		#cm.encode('UTF-8', 'ignore').decode('UTF-8')
-		#comments_list.append(filterOutPunc(cm.split(' ')))
-
 		controversiality_list.append(data[i]['controversiality'])
 
 		children_list.append(data[i]['children'])
 
 		text_list.append(data[i]['text'].lower().split())
-		sentence.append(text_list[0][0])
-		#extLinks.append(hasExternalLink(sentence))
+		#sentence.append(text_list[0][0])
+		#extLinks.append(text_list)
 		
 		i += 1
 	newDict(text_list)
@@ -132,19 +127,20 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
 
 	
-	#isolating y matrix from data 
+	#loop to create y matrix 
 	y = []
 	y = np.zeros((len(popularity_list),1))
 	row = 0
-
 	for word in popularity_list:
 		y[row,0] = word
 		row += 1
 
+
+
 	if taskNumber == 'Task3.1':		
-	
 		#Use this X for Task 3.1
 		x = np.column_stack((children_list,controversiality_list,is_root_list))
+		print(text_list)
 		return (x, y)		
 
 	
@@ -154,18 +150,22 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
 		top60_words = dictToMatrix(topNwords(60),text_list)
 		top160_words = dictToMatrix(topNwords(160),text_list)
-		# print(top60_words)
-		# print(top60_words.shape)
-		
+				
 		x_top_60 = np.column_stack((x_no_text,top60_words))
 		x_top_160 =  np.column_stack((x_no_text,top160_words))
 		return (x_no_text, x_top_60, x_top_160, y)
 
-	if taskNumber == 'Task3.3':
-		#Use this for x for Task 3.3
+	# if taskNumber == 'Task3.3':
+	# 	#Use this for x for Task 3.3
 	
-		x = np.column_stack((children_list,controversiality_list,is_root_list,extLinks))
-		return(x, y)
+	# 	x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
+
+	# 	top60_words = dictToMatrix(topNwords(60),text_list)
+	# 	top160_words = dictToMatrix(topNwords(160),text_list)
+				
+	# 	x_top_60 = np.column_stack((x_no_text,top60_words))
+	# 	x_top_160 =  np.column_stack((x_no_text,top160_words))
+	# 	return (x_no_text, x_top_60, x_top_160, y)
 
 
 
