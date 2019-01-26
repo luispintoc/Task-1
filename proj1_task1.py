@@ -37,38 +37,43 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 				cnt[word] += 1
 
 
-	def filterOutPunc(text_list): 
-		for text in text_list: 
-			endCheck = len(text)-1
-			tempWord = text
-			if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
-				tempWord = text[0:endCheck]
-				
-			if(text[0] == '"' ):
-				
-				tempWord = text[1:]
-				
-			if(text[endCheck] == '"' ):
-				
-				tempWord = text[:endCheck]
-				
-			if(text[0] == '"' and text[endCheck] == '"'):
-				
-				tempWord = text[1:endCheck]
-			if(text[endCheck] == ',' ):
-				
-				tempWord = text[:endCheck]
-			if(text[0] == '*' ):
-				
-				tempWord = text[1:]
-			if(text[endCheck] == '*' ):
-				
-				tempWord = text[:endCheck]
-			if(text[0] == '*' and text[endCheck] == '*'):
-				
-				tempWord = text[1:endCheck]
-			
-		return tempWord       
+	def filterOutPunc(text_list):
+		newTextList = [] 
+		for sentence in text_list:
+			newSentence = []   
+			for text in sentence: 
+				endCheck = len(text)-1
+				tempWord = text
+				if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
+					print("1")
+					tempWord = text[0:endCheck]     
+				if(text[0] == '"' ):
+					print("2")
+					tempWord = text[1:]
+					
+				if(text[endCheck] == '"' ):
+					print("3")
+					tempWord = text[:endCheck]
+					
+				if(text[0] == '"' and text[endCheck] == '"'):
+					print("4")
+					tempWord = text[1:endCheck]
+				if(text[endCheck] == ',' ):
+					
+					tempWord = text[:endCheck]
+				if(text[0] == '*' ):
+					
+					tempWord = text[1:]
+				if(text[endCheck] == '*' ):
+					
+					tempWord = text[:endCheck]
+				if(text[0] == '*' and text[endCheck] == '*'):
+					
+					tempWord = text[1:endCheck]
+
+				newSentence.append(tempWord)
+			newTextList.append(newSentence)
+		return newTextList       
 
 	def hasExternalLink(text_list):
 		for sentence in text_list: 
@@ -96,8 +101,8 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 		text_list.append(data[i]['text'].lower().split())
 		#sentence.append(text_list[0][0])
 		
-		if(taskNumber == 'Task 3.3'): 
-			filterOutPunc(text_list)
+		#if(taskNumber == 'Task 3.3'): 
+			#filterOutPunc(text_list)
 		
 		i += 1
 	newDict(text_list)
@@ -164,16 +169,21 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 	# 	#Use this for x for Task 3.3
 	
 		x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
-
+		#externalList feature
 		x_with_externList = np.column_stack((x_no_text, extLinkCount))
+		#more accurate top words reading 
+		filterOutPunc(text_list)
+		newDict(text_list)
 
-		top60_words = dictToMatrix(topNwords(60),text_list)
+		#top60_words = dictToMatrix(topNwords(60),text_list)
 		top160_words = dictToMatrix(topNwords(160),text_list)
 				
-		x_top_60 = np.column_stack((x_no_text,top60_words))
+		#x_top_60 = np.column_stack((x_no_text,top60_words))
 		x_top_160 =  np.column_stack((x_no_text,top160_words))
 
-		return(x_no_text, x_with_externList, x_top_60, x_top_160, y)
+		x_all = np.column_stack((x_with_externList, x_top_160))
+
+		return(x_no_text, x_all, y)
 		
 
 	 	#top60_words = dictToMatrix(topNwords(60),text_list)
