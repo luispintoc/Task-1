@@ -4,6 +4,7 @@ import matplotlib.pyplot as pt
 from proj1_task1 import splitData
 from proj1_task2 import closed_form
 from proj1_task2 import grad_des
+import time
 
 # It a list of data points, where each datapoint is a dictionary with the following attributes:
 # popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
@@ -26,11 +27,13 @@ def task31(x): #add bias
 	newx = np.column_stack((x,one))
 	return newx
 
-def error_print(y_val,y_tes):
+def error_print(y_train,y_val):
+	error_training = np.square(np.subtract(y_train, y_training)).mean()
 	error_validation = np.square(np.subtract(y_val, y_validation)).mean()
-	error_test = np.square(np.subtract(y_tes, y_test)).mean()
+	print('The mean-squared error on the training set is:', error_training)
 	print('The mean-squared error on the validation set is:', error_validation)
-	print('The mean-squared error on the test set is:', error_test)
+	return error_training, error_validation
+
 
 
 [x_tr, y_training] = splitData(data,0,10000,'Task3.1')
@@ -39,29 +42,137 @@ x_training = task31(x_tr)
 [x_v, y_validation] = splitData(data,10000,11000,'Task3.1')
 x_validation = task31(x_v)
 
-[x_te, y_test] = splitData(data,11000,12000,'Task3.1')
+[x_te, y_test] = splitData(data,0,1000,'Task3.1')
 x_test = task31(x_te)
-
 
 '''
 
 #Closed_form approach
+start1 = time.time()
 w = []
 w = closed_form(x_training, y_training)
+yclosed_predicted_training = np.matmul(x_training,w)
 yclosed_predicted_val = np.matmul(x_validation,w)
-yclosed_predicted_test = np.matmul(x_test,w)
 
-error_print(yclosed_predicted_val, yclosed_predicted_test)
+error_print(yclosed_predicted_training, yclosed_predicted_val)
+
+end1 = time.time()
+closed_time = end1-start1
 
 '''
 
+
 #Gradient descent approach
-wd = []
-w0 = np.random.random((len(x_training[0]),1))
-beta = list(range(0,len(x_training)))
-wd = grad_des(x_training,y_training,w0,beta,0.00001,0.000001,0) #X, Y, w0, beta, eta0, eps, r
+eta0_list = []
+step_size_list = []
+time_list = []
+yv_list = []
+yt_list = []
+i = 1
+while i < 1000:
 
-ygrad_predicted_val = np.matmul(x_validation,wd)
-ygrad_predicted_test = np.matmul(x_test,wd)
+	#Parameters	
+	w0 = np.random.random((len(x_training[0]),1)) #initialization between [0,1]
 
-error_print(ygrad_predicted_val,ygrad_predicted_test)
+	beta = np.linspace(0, 0.1*30 ,len(x_training)) #to test stepsize -> np.linspace(0,0.1*i,len(x_training))
+	#step_size = []
+	#step_size = (beta[1]-beta[0])/len(beta)
+	
+	a = np.linspace(0,0.000018,1000)
+	eta0 = 0.000035 + a[i]
+	#eta0 = 0.000047 #set eta0 to a constant value to test for beta
+
+	alpha = eta0/(1+beta[0])
+	epsilon = 0.001
+	regularization = 0
+
+	start = time.process_time()
+	wd = []
+	wd = grad_des(x_training,y_training,w0,beta,eta0,epsilon,regularization) #X, Y, w0, beta, eta0, eps, r
+	ygrad_predicted_train = np.matmul(x_training,wd)
+	ygrad_predicted_val = np.matmul(x_validation,wd)
+
+	[error_training , error_validation ] = error_print(ygrad_predicted_train,ygrad_predicted_val)
+	end = time.process_time()
+	time_list.append(end - start)
+
+	eta0_list.append(eta0)
+	#step_size_list.append(step_size)
+
+	yt_list.append(error_training)
+	yv_list.append(error_validation)
+
+	i += 1
+
+#Plots
+#code to test different initial learning rates
+
+pt.figure(1)
+pt.scatter(time_list,eta0_list,s=15,color='b')
+axes = pt.gca()
+axes.set_ylim([min(eta0_list),max(eta0_list)])
+pt.ticklabel_format(style='sci',axis='y',scilimits=(-7,-5))
+pt.xlabel('time[s]')
+pt.ylabel('eta0')
+pt.title('Runtime for different learning rates')
+#print(time_list)
+#pt.show()
+
+pt.figure(2)
+pt.scatter(eta0_list,yt_list,s=15,color='b')
+axes = pt.gca()
+axes.set_xlim([min(eta0_list),max(eta0_list)])
+axes.set_ylim([min(yt_list),max(yt_list)])
+pt.ticklabel_format(style='sci',axis='x',scilimits=(-7,-5))
+pt.ylabel('Error')
+pt.xlabel('eta0')
+pt.title('Mean-squared error on the training set as a function of eta0')
+
+pt.figure(3)
+pt.scatter(eta0_list,yv_list,s=15,color='b')
+axes = pt.gca()
+axes.set_xlim([min(eta0_list),max(eta0_list)])
+axes.set_ylim([min(yv_list),max(yv_list)])
+pt.ticklabel_format(style='sci',axis='x',scilimits=(-7,-5))
+pt.xlabel('eta0')
+pt.ylabel('Error')
+pt.title('Mean-squared error on the validation set as a function of eta')
+pt.show()
+
+
+'''
+#code to test stepsize in beta (speed of the decay)
+
+
+pt.figure(1)
+pt.scatter(time_list,step_size_list,s=15,color='b')
+axes = pt.gca()
+axes.set_ylim([min(step_size_list),max(step_size_list)])
+#pt.ticklabel_format(style='sci',axis='y',scilimits=(-7,-5))
+pt.xlabel('time[s]')
+pt.ylabel('step size in beta')
+pt.title('Runtime for different decay rates')
+
+
+pt.figure(2)
+pt.scatter(step_size_list,yt_list,s=15,color='b')
+axes = pt.gca()
+axes.set_xlim([min(step_size_list),max(step_size_list)])
+axes.set_ylim([min(yt_list),max(yt_list)])
+pt.ticklabel_format(style='sci',axis='x',scilimits=(-7,-5))
+pt.ylabel('Error')
+pt.xlabel('Step Size')
+pt.title('Mean-squared error on the training set as a function of beta step size')
+
+pt.figure(3)
+pt.scatter(step_size_list,yv_list,s=15,color='b')
+axes = pt.gca()
+axes.set_xlim([min(step_size_list),max(step_size_list)])
+axes.set_ylim([min(yv_list),max(yv_list)])
+pt.ticklabel_format(style='sci',axis='x',scilimits=(-7,-5))
+pt.xlabel('Step_size')
+pt.ylabel('Error')
+pt.title('Mean-squared error on the validation set as a function of beta step size')
+pt.show()
+
+'''
