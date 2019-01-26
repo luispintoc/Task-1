@@ -14,6 +14,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
 	## VARAIBLES ##
 	cnt = collections.Counter()
+	cnt_feat = collections.Counter()
 	is_root_list = []
 	popularity_list = []
 	controversiality_list = []
@@ -21,7 +22,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 	comments_list = [] 
 	words = []
 	#sentence = []
-	extLinks = [] 
+	extLinkCount = [] 
 	text_list = []
 
 	def bool_to_binary(feature):
@@ -36,46 +37,47 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 				cnt[word] += 1
 
 
-	def filterOutPunc(text,taskNumber): 
-		endCheck = len(text)-1
-		tempWord = text
-		if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
-			tempWord = text[0:endCheck]
-			#print("the word is:" + tempWord)
-		if(text[0] == '"' ):
-			#print("found a quote--front")
-			tempWord = text[1:]
-			#print(tempWord)
-		if(text[endCheck] == '"' ):
-			#print("found a quote--back")
-			tempWord = text[:endCheck]
-			#print(tempWord)
-		if(text[0] == '"' and text[endCheck] == '"'):
-			#print("single word in quotes")
-			tempWord = text[1:endCheck]
-		if(text[endCheck] == ',' ):
-			#print("found a comma")
-			tempWord = text[:endCheck]
-		if(text[0] == '*' ):
-			#print("found an asterisk--front")
-			tempWord = text[1:]
-		if(text[endCheck] == '*' ):
-			#print("found an asterisk-back")
-			tempWord = text[:endCheck]
-		if(text[0] == '*' and text[endCheck] == '*'):
-			#print("single word in asterisks")
-			tempWord = text[1:endCheck]
-		
+	def filterOutPunc(text_list): 
+		for text in text_list: 
+			endCheck = len(text)-1
+			tempWord = text
+			if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
+				tempWord = text[0:endCheck]
+				
+			if(text[0] == '"' ):
+				
+				tempWord = text[1:]
+				
+			if(text[endCheck] == '"' ):
+				
+				tempWord = text[:endCheck]
+				
+			if(text[0] == '"' and text[endCheck] == '"'):
+				
+				tempWord = text[1:endCheck]
+			if(text[endCheck] == ',' ):
+				
+				tempWord = text[:endCheck]
+			if(text[0] == '*' ):
+				
+				tempWord = text[1:]
+			if(text[endCheck] == '*' ):
+				
+				tempWord = text[:endCheck]
+			if(text[0] == '*' and text[endCheck] == '*'):
+				
+				tempWord = text[1:endCheck]
+			
 		return tempWord       
 
 	def hasExternalLink(text_list):
-			extLinkCount = 0
-			
-			for text in text_list: 
-					if (text[0:2] == "www"):
-							extLinkCount += 1
-					
-			return(extLinkCount)
+		for sentence in text_list: 
+			counter = 0
+			for text in sentence:
+				if (text[0:3] == "www"):
+					counter += 1
+			extLinkCount.append(counter)
+		return(extLinkCount)
 
 
 	#for training (0,10000) - for validation (10000,11000) and testing (11000,12000)
@@ -93,10 +95,13 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
 		text_list.append(data[i]['text'].lower().split())
 		#sentence.append(text_list[0][0])
-		#extLinks.append(text_list)
+		
+		if(taskNumber == 'Task 3.3'): 
+			filterOutPunc(text_list)
 		
 		i += 1
 	newDict(text_list)
+	extLinkCount.append(hasExternalLink(text_list))
 
 
 	def topNwords(N):
@@ -155,17 +160,28 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 		x_top_160 =  np.column_stack((x_no_text,top160_words))
 		return (x_no_text, x_top_60, x_top_160, y)
 
-	# if taskNumber == 'Task3.3':
+	if taskNumber == 'Task3.3':
 	# 	#Use this for x for Task 3.3
 	
-	# 	x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
+		x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
 
-	# 	top60_words = dictToMatrix(topNwords(60),text_list)
-	# 	top160_words = dictToMatrix(topNwords(160),text_list)
+		x_with_externList = np.column_stack((x_no_text, extLinkCount))
+
+		top60_words = dictToMatrix(topNwords(60),text_list)
+		top160_words = dictToMatrix(topNwords(160),text_list)
 				
-	# 	x_top_60 = np.column_stack((x_no_text,top60_words))
-	# 	x_top_160 =  np.column_stack((x_no_text,top160_words))
-	# 	return (x_no_text, x_top_60, x_top_160, y)
+		x_top_60 = np.column_stack((x_no_text,top60_words))
+		x_top_160 =  np.column_stack((x_no_text,top160_words))
+
+		return(x_no_text, x_with_externList, x_top_60, x_top_160, y)
+		
+
+	 	#top60_words = dictToMatrix(topNwords(60),text_list)
+	 	#top160_words = dictToMatrix(topNwords(160),text_list)
+		
+		#x_top_60 = np.column_stack((x_no_text,top60_words))
+	 	#x_top_160 =  np.column_stack((x_no_text,top160_words))
+	 	#return (x_no_text, x_top_60, x_top_160, y)
 
 
 
