@@ -74,10 +74,10 @@ time_closed_list.append(closed_time)
 #Gradient descent approach
 w0 = np.random.random((len(x_training[0]),1)) #initialization between [0,1]
 epsilon = 0.001
-regularization = 0
+regularization = 39
 beta = np.linspace(0,0.4,500)
 eta0 = 0.47
-start = time.process_time()
+start = time.time()
 wd = []
 wd = grad_des(x_training,y_training,w0,beta,eta0,epsilon,regularization) #X, Y, w0, beta, eta0, eps, r
 
@@ -88,7 +88,7 @@ ygrad_predicted_val = np.matmul(x_validation,wd)
 [error_training , error_validation ] = error_print(ygrad_predicted_train,ygrad_predicted_val)
 
 
-end = time.process_time()
+end = time.time()
 print('Time elapsed: ',end-start)
 
 
