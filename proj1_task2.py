@@ -24,11 +24,13 @@ def grad_des(X, Y, w0, beta, eta0, eps, r):
     i = 0
     w_old = w0
     m = len(Y)
+    xt = np.matmul(X.T,X)
+    xy = np.matmul(X.T,Y)
     
     while ( ~( (d<eps)|(i>len(beta)-1) ) ):
         
         alfa = eta0/(1+beta[i])
-        w = w_old - 2*(1/m)*alfa * (np.matmul(X.T, np.matmul(X, w_old)) - np.matmul(X.T,Y) - r*w_old)
+        w = w_old - 2*(1/m)*alfa * (np.matmul(xt, w_old) - xy - r*w_old)
         d = np.linalg.norm( w - w_old )
         w_old = w        
         i += 1
