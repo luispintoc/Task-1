@@ -4,6 +4,7 @@ Mahyar Bayran
 Luis Pinto
 Rebecca Salganik
 '''
+
 #All functions are within splitData
 #Inputs are: data set, first data point and last data point (to differenciate between training, validat and test sets)
 #Outputs: There are two different outputs depending on Task 3
@@ -17,24 +18,24 @@ import collections
 import matplotlib.pyplot as pt
 from nltk.util import ngrams
 import operator
-
-
+import collections
 
 def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
     ## VARAIBLES ##
     cnt = collections.Counter()
+    cnt2 = collections.Counter()
     is_root_list = []
     popularity_list = []
     controversiality_list = []
     children_list = []
     comments_list = [] 
     words = []
-    #sentence = []
     extLinks = [] 
     text_list = []
     extLinkCount = []
-
+	stopWords = ["ourselves", "hers", "between", "yourself", "but", "again", "there", "about", "once", "during", "out", "very", "having", "with", "they", "own", "an", "be", "some", "for", "do", "its", "yours", "such", "into", "of", 
+	"most", "itself", "other", "off", "is", "am", "or", "who", "as", "from", "him", "each", "the", "themselves", "until", "below", "are", "we", "these", "your", "his", "through", "nor", "me", "were", "her", "more", "himself", "this", "down", "should", "our", "their", "while", "above", "both", "up", "to", "ours", "had", "she", "all", "no", "when", "at", "any", "before", "them", "same", "and", "been", "have", "in", "will", "on", "does", "yourselves", "then", "that", "because", "what", "over", "why", "so", "can", "did", "not", "now", "under", "he", "you", "herself", "has", "just", "where", "too", "only", "myself", "which", "those", "i", "after", "few", "whom", "being", "if", "theirs", "my", "against", "a", "by", "doing", "it", "how", "further", "was", "here", "than"]
     
     def bool_to_binary(feature):
         if feature is False:
@@ -42,10 +43,11 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         else: 
             return 1
 
-    def newDict(text_list):
+    def newDict(text_list,cnt1):
         for sentence in text_list:
             for word in sentence: 
-                cnt[word] += 1
+                #cnt[word] += 1
+                cnt1[word] += 1
 
 
     def filterOutPunc(text): 
@@ -110,18 +112,25 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
             #extLinks.append(text_list)
             
         i += 1
-    newDict(text_list)
-    hasExternalLink(text_list)
+    newDict(text_list,cnt)
+    links_list = hasExternalLink(text_list)
 
 
-    def topNwords(N):
+    def topNwords(N,cnt1):
         finalList = []
-        topNWordsList = cnt.most_common(N)
+        topNWordsList = cnt1.most_common(N)
         #print(topNWordsList)
         for (word,value) in topNWordsList:
             finalList.append(word)
         return finalList
-                            
+
+    def filterStopWords(text_list,sWords,cnt2):
+    	for sentence in text_list:
+    		for words in sentence:
+    			#print(words)
+    			if not words in sWords:
+    				cnt2[words] += 1
+
     def dictToMatrix (popList, text_data): #first input: N top words , second input: comments
         X = np.zeros( (len(text_data), len(popList)) )
         row = 0
@@ -145,34 +154,21 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         cm_bi = []
         all_bi = {}
         top_bi = []
-        #i=0
         
-        for cm in comments:
-            
-            #i += 1
-            #if i==500:
-                #print('hi')
-                #i= 0
-            
+        for cm in comments:            
             cm_bi.append(list(ngrams(cm, 2)))
             for bi in list(ngrams(cm, 2)):
                 if bi not in list(all_bi.keys()):
                     all_bi[bi] = 0
                 else:
                     all_bi[bi] = all_bi[bi] + 1
-        #print('bye')
         # ascending order
         sorted_bi = sorted(all_bi.items(), key=operator.itemgetter(1))
         # descending order
         sorted_bi.reverse()
-        
         for i in range(0,n):
-            top_bi.append(sorted_bi[i][0])
-            #print(sorted_bi[i])
-        
+            top_bi.append(sorted_bi[i][0])        
         return dictToMatrix(top_bi, cm_bi)
-
-    
     #loop to create y matrix 
     y = []
     y = np.zeros((len(popularity_list),1))
@@ -181,73 +177,32 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         y[row,0] = word
         row += 1
 
-
-
     if taskNumber == 'Task3.1':		
         #Use this X for Task 3.1
         x = np.column_stack((children_list,controversiality_list,is_root_list))
-        #print(text_list)
         return (x, y)		
     
     if taskNumber == 'Task3.2':
         #Use this x for Task 3.2
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
-            
-        top60_words = dictToMatrix(topNwords(60),text_list)
-        top160_words = dictToMatrix(topNwords(160),text_list)
+        top60_words = dictToMatrix(topNwords(60,cnt),text_list)
+        top160_words = dictToMatrix(topNwords(160,cnt),text_list)
         x_top_60 = np.column_stack((x_no_text,top60_words))
         x_top_160 =  np.column_stack((x_no_text,top160_words))
-        print(cnt)
         return (x_no_text, x_top_60, x_top_160, y)
         
     if taskNumber == 'Task3.3':
         #Use this for x for Task 3.3
-    
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
-
-
-        # print(x_no_text.shape)
-        # print(extLinkCount[9999])
-        # print(len(extLinkCount))
-        #external links
-        #x_with_externList = np.column_stack((x_no_text,extLinkCount))
-
-        #more accurate top words readings
-        filterOutPunc(text_list)
-        newDict(text_list)
-
-        #top60_words = dictToMatrix(topNwords(60),text_list)
-        top160_words = dictToMatrix(topNwords(160),text_list)
-
-        #x_top_60 = np.column_stack((x_no_text,top60_words))
+        filterStopWords(text_list, sWords, cnt2)
+        top60_words = dictToMatrix(topNwords(7,cnt2),text_list)
+        #top160_words = dictToMatrix(topNwords(160,cnt2),text_list)
+        #x_top_60 = np.column_stack((x_no_text,x_external_link,top60_words))
         #x_top_160 = np.column_stack((x_no_text,top160_words))
-        #x_all_60 = np.column_stack((x_with_externList,x_top_60))
-        #x_all_160 = np.column_stack((x_with_externList,x_top_160))
-
         top_bigrams_counts = []
-        #uncomment to extract bigrams, comment to load from file instead
-        top_bigrams_counts =  extractBigrams(text_list, 100 )
+        top_bigrams_counts =  extractBigrams(text_list, 24)
         #x_top_bigram = np.column_stack(x_top_60,top_bigrams_counts)
         #top60_words = dictToMatrix(topNwords(60),text_list)
         
-
-       
-        return (x_no_text, top_bigrams_counts , top160_words , y)
-        '''
-
-        return(x_no_text, x_all, y)
-        
-        return(x_no_text,x_top_60,x_top_160,y)
-
-
-        top_bigrams_counts = []
-        #uncomment to extract bigrams, comment to load from file instead
-        top_bigrams_counts =  extractBigrams( text_list, 100 ) 
-        top160_words = dictToMatrix(topNwords(160),text_list)
-        
-
-       
-        return (x_no_text, top_bigrams_counts, top160_words, y)
-
-        return(x_no_text, x_all, y)
-        '''
+        #return (x_no_text,x_top_60,x_top_160,y)
+        return (x_no_text, top_bigrams_counts , top60_words , y)
