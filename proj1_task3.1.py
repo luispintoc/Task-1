@@ -53,13 +53,13 @@ w = closed_form(x_training, y_training)
 yclosed_predicted_training = np.matmul(x_training,w)
 yclosed_predicted_val = np.matmul(x_validation,w)
 
-print('Closed form approach:')
+print('Task 3.1: Linear regression using closed-form approach:')
 [error_training,error_validation]=error_print(yclosed_predicted_training, yclosed_predicted_val)
 end1 = time.time()
 
 print('The mean-squared error on the training set is:', error_training)
 print('The mean-squared error on the validation set is:', error_validation)
-print('Time elapsed: ',end1-start1)
+print('Time elapsed using closed-form: ',end1-start1)
 
 
 #Gradient descent approach
@@ -72,7 +72,7 @@ start = time.time()
 wd = []
 wd = grad_des(x_training,y_training,w0,beta,eta0,epsilon,regularization) #X, Y, w0, beta, eta0, eps, r
 
-print('Gradient descent approach:')
+print('Task 3.1: Linear regression using gradient descent approach:')
 ygrad_predicted_train = np.matmul(x_training,wd)
 ygrad_predicted_val = np.matmul(x_validation,wd)
 
@@ -82,7 +82,7 @@ ygrad_predicted_val = np.matmul(x_validation,wd)
 end = time.time()
 print('The mean-squared error on the training set is:', error_training)
 print('The mean-squared error on the validation set is:', error_validation)
-print('Time elapsed: ',end-start)
+print('Time elapsed using gradient descent: ',end-start)
 
 
 #Optimization
