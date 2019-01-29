@@ -3,6 +3,10 @@ import numpy as np
 import matplotlib.pyplot as pt
 from proj1_task1 import splitData
 from proj1_task2 import closed_form
+from proj1_task2 import grad_des
+import warnings
+
+#warnings.filterwarnings("ignore")
 
 # It a list of data points, where each datapoint is a dictionary with the following attributes:
 # popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
@@ -20,9 +24,11 @@ def bias(x):
 	newx = np.column_stack((x,one))
 	return newx
 
-def error_print(y_val,y_tes):
+def error_print(y_train,y_val,y_tes):
+	error_training = np.square(np.subtract(y_train,y_training)).mean()
 	error_validation = np.square(np.subtract(y_val, y_validation)).mean()
 	error_test = np.square(np.subtract(y_tes, y_test)).mean()
+	print('The mean-squared error on the training set is:', error_training)
 	print('The mean-squared error on the validation set is:', error_validation)
 	print('The mean-squared error on the test set is:', error_test)
 
@@ -45,11 +51,12 @@ x3test = bias(x3_te)
 
 def task32(xt,xv,xtest,y):
 	w = closed_form(xt,y)
+	y_predicted_train = np.matmul(xt,w)
 	y_predicted_val = np.matmul(xv,w)
 	y_predicted_test = np.matmul(xtest,w)
-	error_print(y_predicted_val,y_predicted_test)
+	error_print(y_predicted_train,y_predicted_val,y_predicted_test)
 
-
+print('Closed form:')
 print('Errors for set with no text features:')
 task32(x1training,x1validation,x1test,y_training)
 print('Errors for set with top 60 words:')
@@ -57,3 +64,26 @@ task32(x2training,x2validation,x2test,y_training)
 print('Errors for set with top 160 words:')
 task32(x3training,x3validation,x3test,y_training)
 
+
+'''
+
+
+#Gradient descent approach
+def task321(xt,xv,xtest,y):
+	w0 = np.random.random((len(xt[0]),1))+1
+	beta = np.linspace(0,0.4,500)
+	w = grad_des(xt,y,w0,beta,0.47,0.001,39)
+	y_predicted_train = np.matmul(xt,w)
+	y_predicted_val = np.matmul(xv,w)
+	y_predicted_test = np.matmul(xtest,w)
+	error_print(y_predicted_train,y_predicted_val,y_predicted_test)
+
+print('Gradient descent:')
+print('Errors for set with no text features:')
+task321(x1training,x1validation,x1test,y_training)
+print('Errors for set with top 60 words:')
+task321(x2training,x2validation,x2test,y_training)
+print('Errors for set with top 160 words:')
+task321(x3training,x3validation,x3test,y_training)
+
+'''
