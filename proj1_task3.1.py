@@ -1,3 +1,9 @@
+'''
+Mini-Project1 - COMP 551 - Winter 2019
+Mahyar Bayran
+Luis Pinto
+Rebecca Salganik
+'''
 import json # we need to use the JSON package to load the data, since the data is stored in JSON format
 import numpy as np
 import matplotlib.pyplot as pt
