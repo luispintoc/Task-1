@@ -1,3 +1,9 @@
+'''
+Mini-Project1 - COMP 551 - Winter 2019
+Mahyar Bayran
+Luis Pinto
+Rebecca Salganik
+'''
 #All functions are within splitData
 #Inputs are: data set, first data point and last data point (to differenciate between training, validat and test sets)
 #Outputs: There are two different outputs depending on Task 3
