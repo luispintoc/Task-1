@@ -136,7 +136,7 @@ while i < n:
 
 one3 = np.ones(len(time_list))*0.0000003
 
-pt.figure(2)
+pt.figure(1)
 pt.scatter(step_size_list,yt_list,s=15,color='b')
 pt.plot(one3,yt_list,'k-',color='r')
 axes = pt.gca()
@@ -147,7 +147,7 @@ pt.ylabel('Error')
 pt.xlabel('Step Size')
 pt.title('Mean-squared error on the training set as a function of \u03B2 step size')
 
-pt.figure(3)
+pt.figure(2)
 pt.scatter(step_size_list,yv_list,s=15,color='b')
 pt.plot(one3,yv_list,'k-',color='r')
 axes = pt.gca()
@@ -199,7 +199,7 @@ while i < n:
 one2 = np.ones(len(eta0_list))*0.48
 one3 = np.ones(len(eta0_list))*0.468
 
-pt.figure(5)
+pt.figure(3)
 pt.scatter(eta0_list,yt_list,s=10,color='b')
 pt.plot(one2,yt_list,'k-',color='k')
 pt.plot(one3, yt_list,'k-',color='k')
@@ -211,7 +211,7 @@ pt.ylabel('Error')
 pt.xlabel('${\eta_0}$')
 pt.title('Mean-squared error on the training set as a function of ${\eta_0}$')
 
-pt.figure(6)
+pt.figure(4)
 pt.scatter(eta0_list,yv_list,s=10,color='b')
 pt.plot(one2,yv_list,'k-',color='k')
 pt.plot(one3, yv_list,'k-',color='k')
