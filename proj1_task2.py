@@ -10,6 +10,7 @@ import numpy as np
 def closed_form(X, Y):
 
     x1 = np.matmul(X.T, X)
+    #x1 = xa - lambd*np.identity(len(xa))
     x2 = np.matmul(X.T, Y)
     w = np.matmul(np.linalg.inv(x1) , x2)
     
