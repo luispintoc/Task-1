@@ -14,12 +14,6 @@ from proj1_task2 import grad_des
 import csv
 import time
 
-# It a list of data points, where each datapoint is a dictionary with the following attributes:
-# popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
-# children : the number of replies to this comment (type: int)
-# text : the text of this comment (type: string)
-# controversiality : a score for how "controversial" this comment is (automatically computed by Reddit)
-# is_root : if True, then this comment is a direct reply to a post; if False, this is a direct reply to another comment 
 
 with open("proj1_data.json") as fp:
     data = json.load(fp)
@@ -59,6 +53,8 @@ B = 24
 # number of top words to be used as features (max 160)
 C = 7
 
+print('Task3.3: Closed-form method using the 3 simple features + top 24 bigrams + 7 top words + length of the comment')
+print('Takes about 10 min to run the code, please be patient')
 
 start = time.time()
 
@@ -89,9 +85,9 @@ def task33(xt,xv,xtest,y):
     y_predicted_test = np.matmul(xtest,w)
     error_print(y_predicted_train,y_predicted_val,y_predicted_test)
 
-print('Task3.3: Added features')
 end = time.time()
 elapsed = end - start
 print('Errors:')
 task33(x1_tr, x1_v, x1_te, y_training)
 print('Time elapsed: ', (end - start))
+print('This is our best-performing model')
