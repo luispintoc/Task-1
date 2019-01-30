@@ -34,9 +34,9 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     extLinks = [] 
     text_list = []
     extLinkCount = []
-	stopWords = ["ourselves", "hers", "between", "yourself", "but", "again", "there", "about", "once", "during", "out", "very", "having", "with", "they", "own", "an", "be", "some", "for", "do", "its", "yours", "such", "into", "of", 
-	"most", "itself", "other", "off", "is", "am", "or", "who", "as", "from", "him", "each", "the", "themselves", "until", "below", "are", "we", "these", "your", "his", "through", "nor", "me", "were", "her", "more", "himself", "this", "down", "should", "our", "their", "while", "above", "both", "up", "to", "ours", "had", "she", "all", "no", "when", "at", "any", "before", "them", "same", "and", "been", "have", "in", "will", "on", "does", "yourselves", "then", "that", "because", "what", "over", "why", "so", "can", "did", "not", "now", "under", "he", "you", "herself", "has", "just", "where", "too", "only", "myself", "which", "those", "i", "after", "few", "whom", "being", "if", "theirs", "my", "against", "a", "by", "doing", "it", "how", "further", "was", "here", "than"]
-    
+    sWords = ["once"]
+    #, "about", "but", "again", "then", "that", "a", "i", "after", "it", "how", "if", "the", "in", 'the', 'i', 'to', 'and', 'a', 'of', 'it', 'you', 'that', 'in']
+     
     def bool_to_binary(feature):
         if feature is False:
             return 0
@@ -119,7 +119,6 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     def topNwords(N,cnt1):
         finalList = []
         topNWordsList = cnt1.most_common(N)
-        #print(topNWordsList)
         for (word,value) in topNWordsList:
             finalList.append(word)
         return finalList
@@ -127,7 +126,6 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     def filterStopWords(text_list,sWords,cnt2):
     	for sentence in text_list:
     		for words in sentence:
-    			#print(words)
     			if not words in sWords:
     				cnt2[words] += 1
 
@@ -194,15 +192,8 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     if taskNumber == 'Task3.3':
         #Use this for x for Task 3.3
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
-        filterStopWords(text_list, sWords, cnt2)
-        top60_words = dictToMatrix(topNwords(7,cnt2),text_list)
-        #top160_words = dictToMatrix(topNwords(160,cnt2),text_list)
-        #x_top_60 = np.column_stack((x_no_text,x_external_link,top60_words))
-        #x_top_160 = np.column_stack((x_no_text,top160_words))
+        #filterStopWords(text_list, sWords, cnt2)
+        top60_words = dictToMatrix(topNwords(60,cnt),text_list)
         top_bigrams_counts = []
-        top_bigrams_counts =  extractBigrams(text_list, 24)
-        #x_top_bigram = np.column_stack(x_top_60,top_bigrams_counts)
-        #top60_words = dictToMatrix(topNwords(60),text_list)
-        
-        #return (x_no_text,x_top_60,x_top_160,y)
+        top_bigrams_counts =  extractBigrams(text_list, 30)
         return (x_no_text, top_bigrams_counts , top60_words , y)
