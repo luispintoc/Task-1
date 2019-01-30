@@ -24,19 +24,15 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
 
     ## VARAIBLES ##
     cnt = collections.Counter()
-    cnt2 = collections.Counter()
     is_root_list = []
     popularity_list = []
     controversiality_list = []
     children_list = []
     comments_list = [] 
     words = []
-    extLinks = [] 
     text_list = []
-    extLinkCount = []
-    sWords = ["once"]
-    #, "about", "but", "again", "then", "that", "a", "i", "after", "it", "how", "if", "the", "in", 'the', 'i', 'to', 'and', 'a', 'of', 'it', 'you', 'that', 'in']
-     
+    length_list = []
+
     def bool_to_binary(feature):
         if feature is False:
             return 0
@@ -46,53 +42,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     def newDict(text_list,cnt1):
         for sentence in text_list:
             for word in sentence: 
-                #cnt[word] += 1
-                cnt1[word] += 1
-
-
-    def filterOutPunc(text): 
-        endCheck = len(text)-1
-        tempWord = text
-        if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
-            tempWord = text[0:endCheck]
-            #print("the word is:" + tempWord)
-        if(text[0] == '"' ):
-            #print("found a quote--front")
-            tempWord = text[1:]
-            #print(tempWord)
-        if(text[endCheck] == '"' ):
-            #print("found a quote--back")
-            tempWord = text[:endCheck]
-            #print(tempWord)
-        if(text[0] == '"' and text[endCheck] == '"'):
-            #print("single word in quotes")
-            tempWord = text[1:endCheck]
-        if(text[endCheck] == ',' ):
-            #print("found a comma")
-            tempWord = text[:endCheck]
-        if(text[0] == '*' ):
-            #print("found an asterisk--front")
-            tempWord = text[1:]
-        if(text[endCheck] == '*' ):
-            #print("found an asterisk-back")
-            tempWord = text[:endCheck]
-        if(text[0] == '*' and text[endCheck] == '*'):
-            #print("single word in asterisks")
-            tempWord = text[1:endCheck]
-        
-        return tempWord       
-
-    def hasExternalLink(text_list):
-        #extLinkCount = 0
-        
-        for sentence in text_list:
-        	counter = 0
-	        for text in sentence: 
-	            if (text[0:3] == "htt"):
-	                counter += 1
-	        extLinkCount.append(counter)
-        return(extLinkCount)
-
+                cnt1[word] += 1    
 
     #for training (0,10000) - for validation (10000,11000) and testing (11000,12000)
     i = first_datapoint		
@@ -108,13 +58,9 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         children_list.append(data[i]['children'])
 
         text_list.append(data[i]['text'].lower().split())
-            #sentence.append(text_list[0][0])
-            #extLinks.append(text_list)
             
         i += 1
     newDict(text_list,cnt)
-    links_list = hasExternalLink(text_list)
-
 
     def topNwords(N,cnt1):
         finalList = []
@@ -123,11 +69,14 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
             finalList.append(word)
         return finalList
 
-    def filterStopWords(text_list,sWords,cnt2):
+    def length(text_list,cnt2):
     	for sentence in text_list:
+    		length = 0
     		for words in sentence:
-    			if not words in sWords:
-    				cnt2[words] += 1
+    			length += 1
+    		length_list.append(length)
+
+    	return length_list
 
     def dictToMatrix (popList, text_data): #first input: N top words , second input: comments
         X = np.zeros( (len(text_data), len(popList)) )
@@ -192,8 +141,68 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     if taskNumber == 'Task3.3':
         #Use this for x for Task 3.3
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
-        #filterStopWords(text_list, sWords, cnt2)
+        length_list = length(text_list,cnt)
+        x_no_text = np.column_stack((x_no_text,length_list))
         top60_words = dictToMatrix(topNwords(60,cnt),text_list)
         top_bigrams_counts = []
         top_bigrams_counts =  extractBigrams(text_list, 30)
         return (x_no_text, top_bigrams_counts , top60_words , y)
+
+
+'''
+#Extra features we didn't use:
+
+#Feature to filter out stop-words
+cnt2 = collections.Counter()
+def filterStopWords(text_list,sWords,cnt2):
+	for sentence in text_list:
+		for words in sentence:
+			if not words in sWords:
+				cnt2[words] += 1
+
+#Feature to check if a comment has a link in it
+def hasExternalLink(text_list):
+    #extLinkCount = 0
+    
+    for sentence in text_list:
+    	counter = 0
+        for text in sentence: 
+            if (text[0:3] == "htt"):
+                counter += 1
+        extLinkCount.append(counter)
+    return(extLinkCount)
+
+#Feature to filter out punctuation
+def filterOutPunc(text):
+    endCheck = len(text)-1
+    tempWord = text
+    if(text[endCheck] == '!' or text[endCheck] == '.' or text[endCheck] == '?'): 
+        tempWord = text[0:endCheck]
+        #print("the word is:" + tempWord)
+    if(text[0] == '"' ):
+        #print("found a quote--front")
+        tempWord = text[1:]
+        #print(tempWord)
+    if(text[endCheck] == '"' ):
+        #print("found a quote--back")
+        tempWord = text[:endCheck]
+        #print(tempWord)
+    if(text[0] == '"' and text[endCheck] == '"'):
+        #print("single word in quotes")
+        tempWord = text[1:endCheck]
+    if(text[endCheck] == ',' ):
+        #print("found a comma")
+        tempWord = text[:endCheck]
+    if(text[0] == '*' ):
+        #print("found an asterisk--front")
+        tempWord = text[1:]
+    if(text[endCheck] == '*' ):
+        #print("found an asterisk-back")
+        tempWord = text[:endCheck]
+    if(text[0] == '*' and text[endCheck] == '*'):
+        #print("single word in asterisks")
+        tempWord = text[1:endCheck]
+    
+    return tempWord   
+
+'''
