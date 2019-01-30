@@ -59,19 +59,19 @@ print('Takes about 10 min to run the code, please be patient')
 start = time.time()
 
 #for Task 3.2
-[x1_tr, bigrams_tr, topWords_tr, y_training] = splitData(data,0,10000,'Task3.3')
+[x1_tr, bigrams_tr, topWords_tr, y_training] = splitData(data,0,100,'Task3.3')
 np.savetxt("bigrams_tr.csv", bigrams_tr, delimiter=",")
 x1_tr = np.column_stack((x1_tr, Select( bigrams_tr, B)))
 x1_tr = np.column_stack((x1_tr, Select(topWords_tr, C)))
 x1_tr = bias(x1_tr)
 
-[x1_v, bigrams_v, topWords_v, y_validation] = splitData(data,10000,11000,'Task3.3')
+[x1_v, bigrams_v, topWords_v, y_validation] = splitData(data,100,110,'Task3.3')
 np.savetxt("bigrams_v.csv", bigrams_v, delimiter=",")
 x1_v = np.column_stack((x1_v, Select(bigrams_v, B)))
 x1_v = np.column_stack((x1_v, Select(topWords_v, C)))
 x1_v = bias(x1_v)
 
-[x1_te, bigrams_test, topWords_test, y_test] = splitData(data,11000,12000,'Task3.3')
+[x1_te, bigrams_test, topWords_test, y_test] = splitData(data,110,120,'Task3.3')
 np.savetxt("bigrams_test.csv", bigrams_test, delimiter=",")
 x1_te = np.column_stack((x1_te, Select(bigrams_test, B)))
 x1_te = np.column_stack((x1_te, Select(topWords_test, C)))
