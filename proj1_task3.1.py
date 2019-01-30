@@ -13,13 +13,6 @@ from proj1_task2 import closed_form
 from proj1_task2 import grad_des
 import time
 
-# It a list of data points, where each datapoint is a dictionary with the following attributes:
-# popularity_score : a popularity score for this comment (based on the number of upvotes) (type: float)
-# children : the number of replies to this comment (type: int)
-# text : the text of this comment (type: string)
-# controversiality : a score for how "controversial" this comment is (automatically computed by Reddit)
-# is_root : if True, then this comment is a direct reply to a post; if False, this is a direct reply to another comment 
-
 with open("proj1_data.json") as fp:
     data = json.load(fp)
 
@@ -37,8 +30,6 @@ def task31(x): #add bias
 def error_print(y_train,y_val):
 	error_training = np.square(np.subtract(y_train, y_training)).mean()
 	error_validation = np.square(np.subtract(y_val, y_validation)).mean()
-	#print('The mean-squared error on the training set is:', error_training)
-	#print('The mean-squared error on the validation set is:', error_validation)
 	return error_training, error_validation
 
 
