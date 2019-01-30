@@ -4,6 +4,7 @@ Mahyar Bayran
 Luis Pinto
 Rebecca Salganik
 '''
+
 import json # we need to use the JSON package to load the data, since the data is stored in JSON format
 import numpy as np
 import matplotlib.pyplot as pt
@@ -133,19 +134,7 @@ while i < n:
 
 	i += 1
 
-#code to plot stepsize in beta (speed of the decay)
-
-pt.figure(1)
-pt.scatter(time_list,step_size_list,s=15,color='k')
 one3 = np.ones(len(time_list))*0.0000003
-pt.plot(time_list,one3,'k-',color='r')
-axes = pt.gca()
-axes.set_ylim([min(step_size_list),max(step_size_list)])
-pt.ticklabel_format(style='sci',axis='y',scilimits=(-9,-7))
-pt.xlabel('time[s]')
-pt.ylabel('step size in \u03B2')
-pt.title('Runtime for different decay rates')
-
 
 pt.figure(2)
 pt.scatter(step_size_list,yt_list,s=15,color='b')
@@ -168,7 +157,6 @@ pt.ticklabel_format(style='sci',axis='x',scilimits=(-9,-7))
 pt.xlabel('Step_size')
 pt.ylabel('Error')
 pt.title('Mean-squared error on the validation set as a function of \u03B2 step size')
-#pt.show()
 
 
 #code to plot different initial learning rates
@@ -208,19 +196,8 @@ while i < n:
 
 	i += 1
 
-pt.figure(4)
-pt.scatter(time_list,eta0_list,s=10,color='b')
 one2 = np.ones(len(eta0_list))*0.48
 one3 = np.ones(len(eta0_list))*0.468
-pt.plot(time_list,one2,'k-',color='k')
-pt.plot(time_list,one3,'k-',color='k')
-axes = pt.gca()
-axes.set_ylim([min(eta0_list),max(eta0_list)])
-axes.set_xlim([0,0.15])
-pt.ticklabel_format(style='sci',axis='y',scilimits=(-7,-5))
-pt.xlabel('time [s]')
-pt.ylabel('${\eta_0}$')
-pt.title('Runtime for different initial learning rates')
 
 pt.figure(5)
 pt.scatter(eta0_list,yt_list,s=10,color='b')
