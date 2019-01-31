@@ -123,10 +123,21 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     for word in popularity_list:
         y[row,0] = word
         row += 1
+    
+    def childrenFeature(): 
+        second_children_list = [] 
+        print(children_list)
+        for child in children_list: 
+            tmpChild = child**3
+            second_children_list.append(tmpChild)
+        #print(second_children_list)
+        return second_children_list
+
 
     if taskNumber == 'Task3.1':		
         #Use this X for Task 3.1
         x = np.column_stack((children_list,controversiality_list,is_root_list))
+        
         return (x, y)		
     
     if taskNumber == 'Task3.2':
@@ -140,6 +151,10 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         
     if taskNumber == 'Task3.3':
         #Use this for x for Task 3.3
+        print()
+        kids = childrenFeature()
+        x_more_kids = np.column_stack((kids))
+        print(x_more_kids.shape)
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
         length_list = length(text_list,cnt)
         x_no_text = np.column_stack((x_no_text,length_list))
