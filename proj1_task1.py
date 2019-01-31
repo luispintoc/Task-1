@@ -116,6 +116,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         for i in range(0,n):
             top_bi.append(sorted_bi[i][0])        
         return dictToMatrix(top_bi, cm_bi)
+    
     #loop to create y matrix 
     y = []
     y = np.zeros((len(popularity_list),1))
@@ -126,11 +127,9 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
     
     def childrenFeature(): 
         second_children_list = [] 
-        print(children_list)
         for child in children_list: 
             tmpChild = child**3
             second_children_list.append(tmpChild)
-        #print(second_children_list)
         return second_children_list
 
 
@@ -151,10 +150,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         
     if taskNumber == 'Task3.3':
         #Use this for x for Task 3.3
-        #print()
-        kids = childrenFeature()
-        x_more_kids = np.column_stack((kids))
-        #print(x_more_kids.shape)
+        x_more_kids = childrenFeature()
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
         length_list = length(text_list,cnt)
         x_no_text = np.column_stack((x_no_text,length_list,x_more_kids))
