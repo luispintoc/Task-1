@@ -151,13 +151,13 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         
     if taskNumber == 'Task3.3':
         #Use this for x for Task 3.3
-        print()
+        #print()
         kids = childrenFeature()
         x_more_kids = np.column_stack((kids))
         #print(x_more_kids.shape)
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
         length_list = length(text_list,cnt)
-        x_no_text = np.column_stack((x_no_text,length_list))
+        x_no_text = np.column_stack((x_no_text,length_list,x_more_kids))
         top60_words = dictToMatrix(topNwords(60,cnt),text_list)
         top_bigrams_counts = []
         top_bigrams_counts =  extractBigrams(text_list, 30)
