@@ -154,7 +154,7 @@ def splitData(data,first_datapoint,last_datapoint,taskNumber):
         print()
         kids = childrenFeature()
         x_more_kids = np.column_stack((kids))
-        print(x_more_kids.shape)
+        #print(x_more_kids.shape)
         x_no_text = np.column_stack((children_list,controversiality_list, is_root_list))
         length_list = length(text_list,cnt)
         x_no_text = np.column_stack((x_no_text,length_list))
