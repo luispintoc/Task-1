@@ -63,7 +63,7 @@ print('Time elapsed using closed-form: ',end1-start1)
 #Gradient descent approach
 w0 = np.random.random((len(x_training[0]),1)) #initialization between [0,1]
 epsilon = 0.001
-regularization = 39
+regularization = 0
 beta = np.linspace(0,0.4,500)
 eta0 = 0.47
 start = time.time()
